@@ -92,10 +92,8 @@ Fluent in Russian and English, experienced working in international teams across
 
 ## EDUCATION
 
-**Touro College & University, New York, NY** | 2021 – 2022  
-Bachelor of Science, Business Management
-
-**Financial University under the Government of the Russian Federation, Moscow** | 2018 – 2021
+**Financial University under the Government of the Russian Federation, Moscow** | 2018 – 2022  
+Bachelor of Economics, International Finance
 
 ---
 
