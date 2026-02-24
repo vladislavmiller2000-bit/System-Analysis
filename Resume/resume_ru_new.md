@@ -1,7 +1,7 @@
 # ВЛАДИСЛАВ ОРЕХОВ
 
 **Телефон:** +7 (925) 472-90-54 | **Email:** vladislav.miller2000@gmail.com | **Москва, Россия**  
-**GitHub:** [github.com/vladislavmiller2000-bit](https://github.com/vladislavmiller2000-bit)
+**GitHub:** [github.com/vladislavmiller2000-bit/System-Analysis](https://github.com/vladislavmiller2000-bit/System-Analysis)
 
 ---
 
