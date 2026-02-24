@@ -16,7 +16,7 @@ Seeking a system or business analyst position with opportunities for professiona
 
 Systems analyst with hands-on experience in business process modeling, database design, and analytical SQL. Completed portfolio projects covering the full analyst workflow — from requirements gathering and diagramming (BPMN, UML, ERD) to data normalization and KPI analysis. Additional commercial experience with sales analytics, forecasting, and data visualization at Burger King and Knight Frank.
 
-Fluent in Russian and English, experienced working in international teams across Israel, the US, and Russia. Structured thinker, results-oriented, quick to learn new domains.
+Fluent in Russian and English, experienced working in international teams across Israel and Russia. Structured thinker, results-oriented, quick to learn new domains.
 
 ---
 
