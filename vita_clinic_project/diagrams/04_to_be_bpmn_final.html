@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TO-BE BPMN: Финальная версия</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+        .diagram-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow-x: auto;
+        }
+        .diagram-title {
+            text-align: right;
+            color: #e67e22;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .bpmn-diagram {
+            width: 100%;
+            min-width: 1700px;
+            height: 700px;
+        }
+        
+        .pool {
+            fill: white;
+            stroke: #333;
+            stroke-width: 2;
+        }
+        .pool-header {
+            fill: #2c3e50;
+        }
+        .pool-header.patient { fill: #3498db; }
+        .pool-header.doctor { fill: #27ae60; }
+        
+        .pool-label {
+            fill: white;
+            font-size: 14px;
+            font-weight: bold;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        
+        .start-event {
+            fill: #d5f4e6;
+            stroke: #27ae60;
+            stroke-width: 3;
+        }
+        .end-event {
+            fill: #fadbd8;
+            stroke: #c0392b;
+            stroke-width: 5;
+        }
+        .end-event-success {
+            fill: #d5f4e6;
+            stroke: #27ae60;
+            stroke-width: 5;
+        }
+        .message-event {
+            fill: #f5eef8;
+            stroke: #9b59b6;
+            stroke-width: 2;
+        }
+        .timer-event {
+            fill: #e8f8f5;
+            stroke: #16a085;
+            stroke-width: 2;
+        }
+        .task {
+            fill: white;
+            stroke: #3498db;
+            stroke-width: 2;
+        }
+        .task-label {
+            fill: #333;
+            font-size: 10px;
+            font-family: 'Segoe UI', sans-serif;
+            text-anchor: middle;
+        }
+        .gateway {
+            fill: white;
+            stroke: #f39c12;
+            stroke-width: 2;
+        }
+        
+        .sequence-flow {
+            fill: none;
+            stroke: #333;
+            stroke-width: 1.5;
+            marker-end: url(#arrowhead);
+        }
+        .message-flow {
+            fill: none;
+            stroke: #333;
+            stroke-width: 1.5;
+            stroke-dasharray: 8, 4;
+            marker-end: url(#arrowhead-open);
+        }
+        
+        .flow-label {
+            fill: #666;
+            font-size: 10px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .event-label {
+            fill: #333;
+            font-size: 9px;
+            font-family: 'Segoe UI', sans-serif;
+            text-anchor: middle;
+        }
+        
+        .legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .legend h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+        .legend-line {
+            width: 40px;
+            height: 2px;
+        }
+        .legend-line.solid { background: #333; }
+        .legend-line.dashed { background: repeating-linear-gradient(90deg, #333 0, #333 8px, transparent 8px, transparent 12px); }
+        
+        .elements-used {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+        }
+        .elements-used h3 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+        .elements-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            font-size: 12px;
+        }
+        .element-item {
+            padding: 5px;
+            background: white;
+            border-radius: 5px;
+        }
+        .element-item.event { border-left: 3px solid #9b59b6; }
+        .element-item.task { border-left: 3px solid #3498db; }
+        .element-item.gateway { border-left: 3px solid #f39c12; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 TO-BE BPMN Диаграмма (Финальная версия)</h1>
+        <p class="subtitle">Все элементы из задания использованы</p>
+        
+        <div class="diagram-container">
+            <div class="diagram-title">Медицинская клиника «Вита» имени Е.Л. Яницкой — Мобильное приложение</div>
+            
+            <svg class="bpmn-diagram" viewBox="0 0 1700 650">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+                    </marker>
+                    <marker id="arrowhead-open" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="none" stroke="#333" stroke-width="1"/>
+                    </marker>
+                    <symbol id="envelope" viewBox="0 0 20 14">
+                        <rect x="1" y="1" width="18" height="12" fill="none" stroke="#333" stroke-width="1.5"/>
+                        <polyline points="1,1 10,8 19,1" fill="none" stroke="#333" stroke-width="1.5"/>
+                    </symbol>
+                    <symbol id="timer" viewBox="0 0 20 20">
+                        <circle cx="10" cy="10" r="8" fill="none" stroke="#333" stroke-width="1.5"/>
+                        <line x1="10" y1="10" x2="10" y2="5" stroke="#333" stroke-width="1.5"/>
+                        <line x1="10" y1="10" x2="14" y2="10" stroke="#333" stroke-width="1.5"/>
+                    </symbol>
+                </defs>
+                
+                <!-- ==================== POOL: ПАЦИЕНТ ==================== -->
+                <g id="pool-patient">
+                    <rect class="pool" x="10" y="10" width="1680" height="380"/>
+                    <rect class="pool-header patient" x="10" y="10" width="40" height="380"/>
+                    <text class="pool-label" x="30" y="210" transform="rotate(-90, 30, 210)">ПАЦИЕНТ</text>
+                    
+                    <!-- ===== ROW 1: Регистрация и выбор ===== -->
+                    
+                    <!-- 1. Start Event: Плохое самочувствие -->
+                    <circle class="start-event" cx="80" cy="80" r="18"/>
+                    <text class="event-label" x="80" y="115">Плохое</text>
+                    <text class="event-label" x="80" y="127">самочувствие</text>
+                    
+                    <!-- 2. Task: Открыть приложение медицинского центра -->
+                    <rect class="task" x="130" y="50" width="100" height="60" rx="8"/>
+                    <text class="task-label" x="180" y="72">Открыть</text>
+                    <text class="task-label" x="180" y="85">приложение</text>
+                    <text class="task-label" x="180" y="98">мед. центра</text>
+                    <path class="sequence-flow" d="M 98,80 L 130,80"/>
+                    
+                    <!-- 3. Gateway: Пациент был зарегистрирован? -->
+                    <rect class="gateway" x="260" y="60" width="35" height="35" transform="rotate(45, 277.5, 77.5)"/>
+                    <text class="event-label" x="277" y="83">×</text>
+                    <text class="event-label" x="277" y="130">Пациент был</text>
+                    <text class="event-label" x="277" y="142">зарегистрирован?</text>
+                    <path class="sequence-flow" d="M 230,80 L 255,80"/>
+                    
+                    <!-- Branch: Нет - нужна регистрация -->
+                    <text class="flow-label" x="305" y="45">Нет</text>
+                    <path class="sequence-flow" d="M 277,55 L 277,30 L 340,30"/>
+                    
+                    <!-- 4. Task: Зарегистрироваться -->
+                    <rect class="task" x="340" y="15" width="95" height="45" rx="8"/>
+                    <text class="task-label" x="387" y="35">Зарегистри-</text>
+                    <text class="task-label" x="387" y="48">роваться</text>
+                    
+                    <!-- 5. Task: Ввести персональные данные -->
+                    <rect class="task" x="460" y="15" width="100" height="45" rx="8"/>
+                    <text class="task-label" x="510" y="32">Ввести</text>
+                    <text class="task-label" x="510" y="45">персональные</text>
+                    <text class="task-label" x="510" y="58">данные</text>
+                    <path class="sequence-flow" d="M 435,37 L 460,37"/>
+                    
+                    <!-- Merge back -->
+                    <path class="sequence-flow" d="M 560,37 L 600,37 L 600,80"/>
+                    
+                    <!-- Branch: Да -->
+                    <text class="flow-label" x="305" y="90">Да</text>
+                    <path class="sequence-flow" d="M 300,80 L 600,80"/>
+                    
+                    <!-- 6. Task: Авторизоваться -->
+                    <rect class="task" x="630" y="50" width="90" height="60" rx="8"/>
+                    <text class="task-label" x="675" y="77">Авторизо-</text>
+                    <text class="task-label" x="675" y="90">ваться</text>
+                    <path class="sequence-flow" d="M 600,80 L 630,80"/>
+                    
+                    <!-- 7. Task: Выбрать филиал -->
+                    <rect class="task" x="750" y="50" width="90" height="60" rx="8"/>
+                    <text class="task-label" x="795" y="77">Выбрать</text>
+                    <text class="task-label" x="795" y="90">филиал</text>
+                    <path class="sequence-flow" d="M 720,80 L 750,80"/>
+                    
+                    <!-- 8. Task: Выбрать врача -->
+                    <rect class="task" x="870" y="50" width="90" height="60" rx="8"/>
+                    <text class="task-label" x="915" y="77">Выбрать</text>
+                    <text class="task-label" x="915" y="90">врача</text>
+                    <path class="sequence-flow" d="M 840,80 L 870,80"/>
+                    
+                    <!-- 9. Task: Выбрать дату и время -->
+                    <rect class="task" x="990" y="50" width="90" height="60" rx="8"/>
+                    <text class="task-label" x="1035" y="72">Выбрать</text>
+                    <text class="task-label" x="1035" y="85">дату и</text>
+                    <text class="task-label" x="1035" y="98">время</text>
+                    <path class="sequence-flow" d="M 960,80 L 990,80"/>
+                    
+                    <!-- 10. Task: Записаться на приём -->
+                    <rect class="task" x="1110" y="50" width="90" height="60" rx="8"/>
+                    <text class="task-label" x="1155" y="77">Записаться</text>
+                    <text class="task-label" x="1155" y="90">на приём</text>
+                    <path class="sequence-flow" d="M 1080,80 L 1110,80"/>
+                    
+                    <!-- ===== ROW 2: Подтверждение ===== -->
+                    
+                    <!-- Connector down -->
+                    <path class="sequence-flow" d="M 1155,110 L 1155,180 L 80,180 L 80,220"/>
+                    
+                    <!-- 11. Timer: За 1 день до назначенного приёма -->
+                    <circle class="timer-event" cx="80" cy="240" r="18"/>
+                    <use href="#timer" x="68" y="228" width="24" height="24"/>
+                    <text class="event-label" x="80" y="275">За 1 день</text>
+                    <text class="event-label" x="80" y="287">до назначенного</text>
+                    <text class="event-label" x="80" y="299">приёма</text>
+                    
+                    <!-- 12. Message: Уведомление для подтверждения приёма -->
+                    <circle class="message-event" cx="180" cy="240" r="18"/>
+                    <use href="#envelope" x="168" y="231" width="24" height="18"/>
+                    <text class="event-label" x="180" y="275">Уведомление</text>
+                    <text class="event-label" x="180" y="287">для подтверждения</text>
+                    <text class="event-label" x="180" y="299">приёма</text>
+                    <path class="sequence-flow" d="M 98,240 L 162,240"/>
+                    
+                    <!-- 13. Gateway: Пациент подтвердил запись? -->
+                    <rect class="gateway" x="235" y="220" width="35" height="35" transform="rotate(45, 252.5, 237.5)"/>
+                    <text class="event-label" x="252" y="243">×</text>
+                    <text class="event-label" x="252" y="290">Пациент</text>
+                    <text class="event-label" x="252" y="302">подтвердил</text>
+                    <text class="event-label" x="252" y="314">запись?</text>
+                    <path class="sequence-flow" d="M 198,240 L 230,240"/>
+                    
+                    <!-- Branch: Да - подтвердил -->
+                    <text class="flow-label" x="285" y="235">Да</text>
+                    <path class="sequence-flow" d="M 275,240 L 340,240"/>
+                    
+                    <!-- 14. Task: Подтвердить запись -->
+                    <rect class="task" x="340" y="210" width="95" height="60" rx="8"/>
+                    <text class="task-label" x="387" y="237">Подтвердить</text>
+                    <text class="task-label" x="387" y="250">запись</text>
+                    
+                    <!-- 15. Timer: В день записи на приём -->
+                    <circle class="timer-event" cx="490" cy="240" r="18"/>
+                    <use href="#timer" x="478" y="228" width="24" height="24"/>
+                    <text class="event-label" x="490" y="275">В день</text>
+                    <text class="event-label" x="490" y="287">записи на</text>
+                    <text class="event-label" x="490" y="299">приём</text>
+                    <path class="sequence-flow" d="M 435,240 L 472,240"/>
+                    
+                    <!-- 16. Task: Прийти на приём -->
+                    <rect class="task" x="545" y="210" width="95" height="60" rx="8"/>
+                    <text class="task-label" x="592" y="237">Прийти</text>
+                    <text class="task-label" x="592" y="250">на приём</text>
+                    <path class="sequence-flow" d="M 508,240 L 545,240"/>
+                    
+                    <!-- Sequence Flow: Прийти на приём → Врач (Пациент пришёл) -->
+                    <!-- Это поток операций внутри одного пула (между дорожками) -->
+                    <path class="sequence-flow" d="M 640,240 L 680,240 L 680,395 L 82,395 L 82,500"/>
+                    
+                    <!-- Branch: Нет - отменил -->
+                    <text class="flow-label" x="252" y="360">Нет</text>
+                    <path class="sequence-flow" d="M 252,260 L 252,350 L 340,350"/>
+                    
+                    <!-- 17. Task: Отменить запись -->
+                    <rect class="task" x="340" y="320" width="95" height="60" rx="8" style="stroke: #e74c3c;"/>
+                    <text class="task-label" x="387" y="347">Отменить</text>
+                    <text class="task-label" x="387" y="360">запись</text>
+                    
+                    <!-- 18. End Event: Запись отменена -->
+                    <circle class="end-event" cx="490" cy="350" r="18"/>
+                    <text class="event-label" x="490" y="385">Запись</text>
+                    <text class="event-label" x="490" y="397">отменена</text>
+                    <path class="sequence-flow" d="M 435,350 L 472,350"/>
+                </g>
+                
+                <!-- ==================== POOL: ВРАЧ ==================== -->
+                <g id="pool-doctor">
+                    <rect class="pool" x="10" y="400" width="1680" height="200"/>
+                    <rect class="pool-header doctor" x="10" y="400" width="40" height="200"/>
+                    <text class="pool-label" x="30" y="510" transform="rotate(-90, 30, 510)">ВРАЧ</text>
+                    
+                    <!-- 19. Message Event: Пациент пришёл на приём -->
+                    <circle class="message-event" cx="100" cy="500" r="18"/>
+                    <use href="#envelope" x="88" y="491" width="24" height="18"/>
+                    <text class="event-label" x="100" y="535">Пациент</text>
+                    <text class="event-label" x="100" y="547">пришёл на</text>
+                    <text class="event-label" x="100" y="559">приём</text>
+                    
+                    <!-- 20. Task: Принять пациента -->
+                    <rect class="task" x="160" y="470" width="95" height="60" rx="8"/>
+                    <text class="task-label" x="207" y="497">Принять</text>
+                    <text class="task-label" x="207" y="510">пациента</text>
+                    <path class="sequence-flow" d="M 118,500 L 160,500"/>
+                    
+                    <!-- 21. Task: Поставить диагноз -->
+                    <rect class="task" x="290" y="470" width="95" height="60" rx="8"/>
+                    <text class="task-label" x="337" y="497">Поставить</text>
+                    <text class="task-label" x="337" y="510">диагноз</text>
+                    <path class="sequence-flow" d="M 255,500 L 290,500"/>
+                    
+                    <!-- 22. Message Event: Диагноз поставлен -->
+                    <circle class="message-event" cx="440" cy="500" r="18"/>
+                    <use href="#envelope" x="428" y="491" width="24" height="18"/>
+                    <text class="event-label" x="440" y="535">Диагноз</text>
+                    <text class="event-label" x="440" y="547">поставлен</text>
+                    <path class="sequence-flow" d="M 385,500 L 422,500"/>
+                    
+                    <!-- 23. Task: Назначить лечение -->
+                    <rect class="task" x="500" y="470" width="95" height="60" rx="8"/>
+                    <text class="task-label" x="547" y="497">Назначить</text>
+                    <text class="task-label" x="547" y="510">лечение</text>
+                    <path class="sequence-flow" d="M 458,500 L 500,500"/>
+                    
+                    <!-- 24. End Event: Оформлен протокол осмотра (КОНЕЧНОЕ для всего процесса) -->
+                    <circle class="end-event-success" cx="650" cy="500" r="18"/>
+                    <text class="event-label" x="650" y="535">Оформлен</text>
+                    <text class="event-label" x="650" y="547">протокол</text>
+                    <text class="event-label" x="650" y="559">осмотра</text>
+                    <path class="sequence-flow" d="M 595,500 L 632,500"/>
+                </g>
+                
+                <!-- УДАЛЕНО: Message Flows заменены на Sequence Flow внутри одного пула -->
+                <!-- Теперь поток идёт: Пациент (Прийти на приём) → Врач (Пациент пришёл) -->
+                
+            </svg>
+            
+            <!-- Легенда -->
+            <div class="legend">
+                <h3>📖 Легенда BPMN</h3>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <svg width="30" height="30"><circle cx="15" cy="15" r="12" fill="#d5f4e6" stroke="#27ae60" stroke-width="3"/></svg>
+                        <span>Начальное событие</span>
+                    </div>
+                    <div class="legend-item">
+                        <svg width="30" height="30"><circle cx="15" cy="15" r="10" fill="#fadbd8" stroke="#c0392b" stroke-width="5"/></svg>
+                        <span>Конечное событие</span>
+                    </div>
+                    <div class="legend-item">
+                        <svg width="30" height="30"><circle cx="15" cy="15" r="12" fill="#f5eef8" stroke="#9b59b6" stroke-width="2"/><text x="15" y="19" text-anchor="middle" font-size="10">✉</text></svg>
+                        <span>Событие-сообщение</span>
+                    </div>
+                    <div class="legend-item">
+                        <svg width="30" height="30"><circle cx="15" cy="15" r="12" fill="#e8f8f5" stroke="#16a085" stroke-width="2"/><text x="15" y="19" text-anchor="middle" font-size="10">⏰</text></svg>
+                        <span>Таймер</span>
+                    </div>
+                    <div class="legend-item">
+                        <svg width="80" height="35"><rect x="5" y="5" width="70" height="25" rx="6" fill="white" stroke="#3498db" stroke-width="2"/><text x="40" y="22" text-anchor="middle" font-size="9">Задача</text></svg>
+                        <span>Задача (Task)</span>
+                    </div>
+                    <div class="legend-item">
+                        <svg width="30" height="30"><rect x="5" y="5" width="18" height="18" fill="white" stroke="#f39c12" stroke-width="2" transform="rotate(45, 14, 14)"/></svg>
+                        <span>XOR-шлюз</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line solid"></div>
+                        <span>Поток управления (Sequence Flow)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line dashed"></div>
+                        <span>Поток сообщений (Message Flow)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Использованные элементы -->
+            <div class="elements-used">
+                <h3>✅ Все использованные элементы из задания</h3>
+                <div class="elements-grid">
+                    <div>
+                        <strong>События (9 шт.):</strong>
+                        <div class="element-item event">○ Плохое самочувствие</div>
+                        <div class="element-item event">⏰ За 1 день до назначенного приёма</div>
+                        <div class="element-item event">✉️ Уведомление для подтверждения приёма</div>
+                        <div class="element-item event">⏰ В день записи на приём</div>
+                        <div class="element-item event">⊙ Запись отменена</div>
+                        <div class="element-item event">✉️ Пациент пришёл на приём</div>
+                        <div class="element-item event">✉️ Диагноз поставлен</div>
+                        <div class="element-item event">⊙ Оформлен протокол осмотра (конечное)</div>
+                        <div class="element-item event">⊙ Запись отменена (конечное)</div>
+                    </div>
+                    <div>
+                        <strong>Шлюзы (2 шт.):</strong>
+                        <div class="element-item gateway">◇ Пациент был зарегистрирован?</div>
+                        <div class="element-item gateway">◇ Пациент подтвердил запись?</div>
+                    </div>
+                    <div>
+                        <strong>Задачи (14 шт.):</strong>
+                        <div class="element-item task">□ Открыть приложение мед. центра</div>
+                        <div class="element-item task">□ Зарегистрироваться</div>
+                        <div class="element-item task">□ Ввести персональные данные</div>
+                        <div class="element-item task">□ Авторизоваться</div>
+                        <div class="element-item task">□ Выбрать филиал</div>
+                        <div class="element-item task">□ Выбрать врача</div>
+                        <div class="element-item task">□ Выбрать дату и время</div>
+                        <div class="element-item task">□ Записаться на приём</div>
+                        <div class="element-item task">□ Подтвердить запись</div>
+                        <div class="element-item task">□ Отменить запись</div>
+                        <div class="element-item task">□ Прийти на приём</div>
+                        <div class="element-item task">□ Принять пациента</div>
+                        <div class="element-item task">□ Поставить диагноз</div>
+                        <div class="element-item task">□ Назначить лечение</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

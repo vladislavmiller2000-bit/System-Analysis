@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Диаграмма Чена - Заказ (0НФ)</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .diagram-container {
+            background: white;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            overflow: auto;
+        }
+        svg {
+            display: block;
+            margin: 0 auto;
+        }
+        /* Стили для текста */
+        .entity-text {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .attr-text {
+            font-size: 12px;
+        }
+        .pk-text {
+            font-size: 12px;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        .derived-text {
+            font-size: 11px;
+            font-style: italic;
+        }
+        .composite-text {
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .sub-text {
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>📊 Диаграмма в нотации Чена — Сущность "Заказ" (0НФ)</h1>
+    
+    <div class="diagram-container">
+        <svg width="1400" height="1100" viewBox="0 0 1400 1100">
+            <!-- Определения для пунктирных линий и двойных контуров -->
+            <defs>
+                <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#666"/>
+                </marker>
+            </defs>
+            
+            <!-- ========== СУЩНОСТЬ ЗАКАЗ (центр) ========== -->
+            <rect x="600" y="480" width="200" height="60" fill="#667eea" stroke="#4a5568" stroke-width="3" rx="5"/>
+            <text x="700" y="518" text-anchor="middle" fill="white" class="entity-text">ЗАКАЗ</text>
+            
+            <!-- ========== ПЕРВИЧНЫЙ КЛЮЧ - № Заказа ========== -->
+            <line x1="700" y1="480" x2="700" y2="420" stroke="#333" stroke-width="2"/>
+            <ellipse cx="700" cy="390" rx="70" ry="30" fill="#fff3cd" stroke="#ffc107" stroke-width="3"/>
+            <text x="700" y="395" text-anchor="middle" class="pk-text">№ Заказа</text>
+            
+            <!-- ========== ПРОСТЫЕ АТРИБУТЫ (слева сверху) ========== -->
+            <!-- Дата заказа -->
+            <line x1="600" y1="490" x2="480" y2="420" stroke="#333" stroke-width="1.5"/>
+            <ellipse cx="420" cy="390" rx="65" ry="28" fill="#e3f2fd" stroke="#2196f3" stroke-width="2"/>
+            <text x="420" y="395" text-anchor="middle" class="attr-text">Дата заказа</text>
+            
+            <!-- Время заказа -->
+            <line x1="600" y1="500" x2="420" y2="480" stroke="#333" stroke-width="1.5"/>
+            <ellipse cx="350" cy="470" rx="70" ry="28" fill="#e3f2fd" stroke="#2196f3" stroke-width="2"/>
+            <text x="350" y="475" text-anchor="middle" class="attr-text">Время заказа</text>
+            
+            <!-- Статус заказа -->
+            <line x1="600" y1="520" x2="420" y2="550" stroke="#333" stroke-width="1.5"/>
+            <ellipse cx="350" cy="560" rx="70" ry="28" fill="#e3f2fd" stroke="#2196f3" stroke-width="2"/>
+            <text x="350" y="565" text-anchor="middle" class="attr-text">Статус заказа</text>
+            
+            <!-- ========== ПРОИЗВОДНЫЕ АТРИБУТЫ (пунктир) ========== -->
+            <!-- Сумма заказа -->
+            <line x1="600" y1="530" x2="380" y2="640" stroke="#333" stroke-width="1.5" stroke-dasharray="5,3"/>
+            <ellipse cx="310" cy="660" rx="70" ry="28" fill="#fce4ec" stroke="#e91e63" stroke-width="2" stroke-dasharray="8,4"/>
+            <text x="310" y="665" text-anchor="middle" class="derived-text">Сумма заказа</text>
+            
+            <!-- Сумма скидок -->
+            <line x1="620" y1="540" x2="450" y2="720" stroke="#333" stroke-width="1.5" stroke-dasharray="5,3"/>
+            <ellipse cx="380" cy="740" rx="70" ry="28" fill="#fce4ec" stroke="#e91e63" stroke-width="2" stroke-dasharray="8,4"/>
+            <text x="380" y="745" text-anchor="middle" class="derived-text">Сумма скидок</text>
+            
+            <!-- ========== СОСТАВНОЙ: ПОЛЬЗОВАТЕЛЬ (левый верхний угол) ========== -->
+            <line x1="620" y1="480" x2="200" y2="280" stroke="#333" stroke-width="2"/>
+            <ellipse cx="150" cy="250" rx="85" ry="35" fill="#e8f5e9" stroke="#4caf50" stroke-width="3"/>
+            <text x="150" y="255" text-anchor="middle" class="composite-text">Пользователь</text>
+            
+            <!-- Податрибуты Пользователя -->
+            <line x1="150" y1="215" x2="80" y2="160" stroke="#4caf50" stroke-width="1.5"/>
+            <ellipse cx="80" cy="130" rx="50" ry="22" fill="#f1f8e9" stroke="#8bc34a" stroke-width="2"/>
+            <text x="80" y="135" text-anchor="middle" class="sub-text">Логин</text>
+            
+            <line x1="150" y1="215" x2="180" y2="150" stroke="#4caf50" stroke-width="1.5"/>
+            <ellipse cx="190" cy="120" rx="50" ry="22" fill="#f1f8e9" stroke="#8bc34a" stroke-width="2"/>
+            <text x="190" y="125" text-anchor="middle" class="sub-text">Пароль</text>
+            
+            <line x1="65" y1="250" x2="20" y2="200" stroke="#4caf50" stroke-width="1.5"/>
+            <ellipse cx="20" cy="170" rx="50" ry="22" fill="#f1f8e9" stroke="#8bc34a" stroke-width="2"/>
+            <text x="20" y="175" text-anchor="middle" class="sub-text">E-mail</text>
+            
+            <line x1="65" y1="260" x2="30" y2="310" stroke="#4caf50" stroke-width="1.5"/>
+            <ellipse cx="30" cy="340" rx="60" ry="22" fill="#f1f8e9" stroke="#8bc34a" stroke-width="2"/>
+            <text x="30" y="345" text-anchor="middle" class="sub-text">Телефон</text>
+            
+            <!-- ФИО (вложенный составной) -->
+            <line x1="235" y1="250" x2="320" y2="200" stroke="#4caf50" stroke-width="1.5"/>
+            <ellipse cx="350" cy="180" rx="45" ry="22" fill="#c8e6c9" stroke="#4caf50" stroke-width="2"/>
+            <text x="350" y="185" text-anchor="middle" class="sub-text" style="font-weight:bold">ФИО</text>
+            
+            <!-- Податрибуты ФИО -->
+            <line x1="350" y1="158" x2="290" y2="100" stroke="#81c784" stroke-width="1"/>
+            <ellipse cx="280" cy="75" rx="50" ry="20" fill="#f1f8e9" stroke="#a5d6a7" stroke-width="1.5"/>
+            <text x="280" y="80" text-anchor="middle" class="sub-text">Фамилия</text>
+            
+            <line x1="350" y1="158" x2="350" y2="100" stroke="#81c784" stroke-width="1"/>
+            <ellipse cx="350" cy="75" rx="40" ry="20" fill="#f1f8e9" stroke="#a5d6a7" stroke-width="1.5"/>
+            <text x="350" y="80" text-anchor="middle" class="sub-text">Имя</text>
+            
+            <line x1="350" y1="158" x2="420" y2="100" stroke="#81c784" stroke-width="1"/>
+            <ellipse cx="430" cy="75" rx="50" ry="20" fill="#f1f8e9" stroke="#a5d6a7" stroke-width="1.5"/>
+            <text x="430" y="80" text-anchor="middle" class="sub-text">Отчество</text>
+            
+            <!-- ========== МНОЖЕСТВЕННЫЙ: ТОВАР (справа) - двойной контур ========== -->
+            <line x1="800" y1="500" x2="1050" y2="400" stroke="#333" stroke-width="2"/>
+            <!-- Внешний овал -->
+            <ellipse cx="1120" cy="370" rx="90" ry="40" fill="none" stroke="#ff9800" stroke-width="3"/>
+            <!-- Внутренний овал -->
+            <ellipse cx="1120" cy="370" rx="80" ry="32" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
+            <text x="1120" y="375" text-anchor="middle" class="composite-text" fill="#e65100">Товар</text>
+            
+            <!-- Податрибуты Товара -->
+            <line x1="1120" y1="330" x2="1020" y2="270" stroke="#ff9800" stroke-width="1.5"/>
+            <ellipse cx="980" cy="250" rx="60" ry="22" fill="#fff8e1" stroke="#ffb74d" stroke-width="2"/>
+            <text x="980" y="255" text-anchor="middle" class="sub-text">Артикул</text>
+            
+            <line x1="1120" y1="330" x2="1120" y2="270" stroke="#ff9800" stroke-width="1.5"/>
+            <ellipse cx="1120" cy="245" rx="60" ry="22" fill="#fff8e1" stroke="#ffb74d" stroke-width="2"/>
+            <text x="1120" y="250" text-anchor="middle" class="sub-text">Название</text>
+            
+            <line x1="1120" y1="330" x2="1220" y2="270" stroke="#ff9800" stroke-width="1.5"/>
+            <ellipse cx="1260" cy="250" rx="60" ry="22" fill="#fff8e1" stroke="#ffb74d" stroke-width="2"/>
+            <text x="1260" y="255" text-anchor="middle" class="sub-text">Описание</text>
+            
+            <line x1="1200" y1="370" x2="1300" y2="340" stroke="#ff9800" stroke-width="1.5"/>
+            <ellipse cx="1340" cy="320" rx="55" ry="22" fill="#fff8e1" stroke="#ffb74d" stroke-width="2"/>
+            <text x="1340" y="325" text-anchor="middle" class="sub-text">Цена</text>
+            
+            <line x1="1200" y1="390" x2="1300" y2="420" stroke="#ff9800" stroke-width="1.5"/>
+            <ellipse cx="1330" cy="440" rx="65" ry="22" fill="#fff8e1" stroke="#ffb74d" stroke-width="2"/>
+            <text x="1330" y="445" text-anchor="middle" class="sub-text">Размер скидки</text>
+            
+            <line x1="1120" y1="410" x2="1120" y2="480" stroke="#ff9800" stroke-width="1.5"/>
+            <ellipse cx="1120" cy="510" rx="75" ry="22" fill="#fff8e1" stroke="#ffb74d" stroke-width="2"/>
+            <text x="1120" y="515" text-anchor="middle" class="sub-text">Название акции</text>
+            
+            <line x1="1040" y1="390" x2="980" y2="440" stroke="#ff9800" stroke-width="1.5"/>
+            <ellipse cx="940" cy="460" rx="55" ry="22" fill="#fff8e1" stroke="#ffb74d" stroke-width="2"/>
+            <text x="940" y="465" text-anchor="middle" class="sub-text">Количество</text>
+            
+            <!-- ========== СОСТАВНОЙ: АДРЕС ДОСТАВКИ (справа внизу) ========== -->
+            <line x1="780" y1="540" x2="950" y2="650" stroke="#333" stroke-width="2"/>
+            <ellipse cx="1020" cy="680" rx="90" ry="35" fill="#e8f5e9" stroke="#4caf50" stroke-width="3"/>
+            <text x="1020" y="685" text-anchor="middle" class="composite-text">Адрес доставки</text>
+            
+            <!-- Податрибуты адреса -->
+            <line x1="1020" y1="715" x2="920" y2="770" stroke="#4caf50" stroke-width="1.5"/>
+            <ellipse cx="890" cy="790" rx="50" ry="22" fill="#f1f8e9" stroke="#8bc34a" stroke-width="2"/>
+            <text x="890" y="795" text-anchor="middle" class="sub-text">Индекс</text>
+            
+            <line x1="1020" y1="715" x2="1000" y2="780" stroke="#4caf50" stroke-width="1.5"/>
+            <ellipse cx="990" cy="810" rx="45" ry="22" fill="#f1f8e9" stroke="#8bc34a" stroke-width="2"/>
+            <text x="990" y="815" text-anchor="middle" class="sub-text">Город</text>
+            
+            <line x1="1020" y1="715" x2="1080" y2="780" stroke="#4caf50" stroke-width="1.5"/>
+            <ellipse cx="1100" cy="810" rx="45" ry="22" fill="#f1f8e9" stroke="#8bc34a" stroke-width="2"/>
+            <text x="1100" y="815" text-anchor="middle" class="sub-text">Адрес</text>
+            
+            <line x1="1020" y1="715" x2="1150" y2="750" stroke="#4caf50" stroke-width="1.5"/>
+            <ellipse cx="1200" cy="770" rx="65" ry="22" fill="#f1f8e9" stroke="#8bc34a" stroke-width="2"/>
+            <text x="1200" y="775" text-anchor="middle" class="sub-text">Дата доставки</text>
+            
+            <!-- ========== СОСТАВНОЙ: ДАННЫЕ ОБ ОПЛАТЕ (внизу) ========== -->
+            <line x1="700" y1="540" x2="700" y2="650" stroke="#333" stroke-width="2"/>
+            <ellipse cx="700" cy="700" rx="100" ry="40" fill="#e8f5e9" stroke="#4caf50" stroke-width="3"/>
+            <text x="700" y="705" text-anchor="middle" class="composite-text">Данные об оплате</text>
+            
+            <!-- Податрибуты оплаты -->
+            <line x1="700" y1="740" x2="580" y2="820" stroke="#4caf50" stroke-width="1.5"/>
+            <ellipse cx="540" cy="850" rx="60" ry="22" fill="#f1f8e9" stroke="#8bc34a" stroke-width="2"/>
+            <text x="540" y="855" text-anchor="middle" class="sub-text">Номер чека</text>
+            
+            <line x1="700" y1="740" x2="700" y2="830" stroke="#4caf50" stroke-width="1.5"/>
+            <ellipse cx="700" cy="860" rx="70" ry="22" fill="#f1f8e9" stroke="#8bc34a" stroke-width="2"/>
+            <text x="700" y="865" text-anchor="middle" class="sub-text">Способ оплаты</text>
+            
+            <line x1="700" y1="740" x2="830" y2="820" stroke="#4caf50" stroke-width="1.5"/>
+            <ellipse cx="870" cy="850" rx="65" ry="22" fill="#f1f8e9" stroke="#8bc34a" stroke-width="2"/>
+            <text x="870" y="855" text-anchor="middle" class="sub-text">Статус оплаты</text>
+            
+            <!-- ========== ЛЕГЕНДА ========== -->
+            <rect x="50" y="920" width="1300" height="160" fill="#f5f5f5" stroke="#ddd" stroke-width="2" rx="10"/>
+            <text x="700" y="950" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">📋 ЛЕГЕНДА</text>
+            
+            <!-- Сущность -->
+            <rect x="80" y="970" width="80" height="35" fill="#667eea" stroke="#4a5568" stroke-width="2" rx="3"/>
+            <text x="120" y="993" text-anchor="middle" fill="white" font-size="11">Сущность</text>
+            <text x="180" y="993" font-size="12" fill="#333">— Прямоугольник</text>
+            
+            <!-- PK -->
+            <ellipse cx="400" cy="987" rx="50" ry="20" fill="#fff3cd" stroke="#ffc107" stroke-width="2"/>
+            <text x="400" y="992" text-anchor="middle" font-size="10" text-decoration="underline" font-weight="bold">ПК</text>
+            <text x="470" y="992" font-size="12" fill="#333">— Первичный ключ (подчёркнут)</text>
+            
+            <!-- Простой -->
+            <ellipse cx="720" cy="987" rx="50" ry="20" fill="#e3f2fd" stroke="#2196f3" stroke-width="2"/>
+            <text x="720" y="992" text-anchor="middle" font-size="10">Простой</text>
+            <text x="790" y="992" font-size="12" fill="#333">— Простой атрибут</text>
+            
+            <!-- Составной -->
+            <ellipse cx="1000" cy="987" rx="55" ry="20" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
+            <text x="1000" y="992" text-anchor="middle" font-size="10" font-weight="bold">Составной</text>
+            <text x="1080" y="992" font-size="12" fill="#333">— Составной атрибут</text>
+            
+            <!-- Множественный (двойной) -->
+            <ellipse cx="150" cy="1040" rx="55" ry="22" fill="none" stroke="#ff9800" stroke-width="2"/>
+            <ellipse cx="150" cy="1040" rx="48" ry="17" fill="#fff3e0" stroke="#ff9800" stroke-width="1.5"/>
+            <text x="150" y="1045" text-anchor="middle" font-size="9" fill="#e65100">Множеств.</text>
+            <text x="230" y="1045" font-size="12" fill="#333">— Множественный (двойной контур)</text>
+            
+            <!-- Производный (пунктир) -->
+            <ellipse cx="550" cy="1040" rx="55" ry="20" fill="#fce4ec" stroke="#e91e63" stroke-width="2" stroke-dasharray="6,3"/>
+            <text x="550" y="1045" text-anchor="middle" font-size="9" font-style="italic">Производн.</text>
+            <text x="630" y="1045" font-size="12" fill="#333">— Производный (пунктир, вычисляется)</text>
+            
+            <!-- Податрибут -->
+            <ellipse cx="920" cy="1040" rx="50" ry="18" fill="#f1f8e9" stroke="#8bc34a" stroke-width="1.5"/>
+            <text x="920" y="1045" text-anchor="middle" font-size="9">Податрибут</text>
+            <text x="995" y="1045" font-size="12" fill="#333">— Часть составного атрибута</text>
+            
+        </svg>
+    </div>
+    
+    <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; margin-top: 20px; max-width: 1400px; margin-left: auto; margin-right: auto;">
+        <h3 style="color: #2e7d32; margin-top: 0;">✅ Это и есть твоя исправленная диаграмма Чена!</h3>
+        <p>Скопируй эту структуру в draw.io. Главное:</p>
+        <ul>
+            <li><strong>Только ОДНА сущность</strong> — "Заказ"</li>
+            <li><strong>Товар</strong> имеет ДВОЙНОЙ контур (множественный атрибут)</li>
+            <li><strong>Сумма заказа</strong> и <strong>Сумма скидок</strong> — ПУНКТИРОМ (производные)</li>
+            <li><strong>НЕТ ID Пользователя</strong> — есть составной атрибут "Пользователь" с Логином</li>
+        </ul>
+    </div>
+</body>
+</html>

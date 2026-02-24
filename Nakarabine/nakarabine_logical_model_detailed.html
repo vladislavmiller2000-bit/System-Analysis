@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Логическая модель данных - Накарабине (Crow's Foot, 3НФ)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 10px;
+            font-size: 2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .diagram-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow-x: auto;
+        }
+        
+        .diagram {
+            position: relative;
+            min-width: 1400px;
+            min-height: 750px;
+            margin: 0 auto;
+        }
+        
+        .entity {
+            position: absolute;
+            background: white;
+            border: 3px solid #2c3e50;
+            border-radius: 8px;
+            min-width: 200px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+        
+        .entity-header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+            border-bottom: 3px solid #2c3e50;
+        }
+        
+        .entity-body {
+            padding: 10px 15px;
+        }
+        
+        .attribute {
+            padding: 6px 0;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .attribute:last-child {
+            border-bottom: none;
+        }
+        
+        .pk {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .pk::before {
+            content: "🔑 ";
+            font-size: 0.85em;
+        }
+        
+        .fk {
+            color: #9b59b6;
+            font-style: italic;
+        }
+        
+        .fk::before {
+            content: "🔗 ";
+            font-size: 0.85em;
+        }
+        
+        .attr-name {
+            flex: 1;
+        }
+        
+        .attr-type {
+            color: #7f8c8d;
+            font-size: 0.8em;
+            margin-left: 8px;
+        }
+        
+        /* SVG для связей */
+        .connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .connection-line {
+            stroke: #2c3e50;
+            stroke-width: 2;
+            fill: none;
+        }
+        
+        .crow-foot {
+            stroke: #2c3e50;
+            stroke-width: 2;
+            fill: none;
+        }
+        
+        .one-marker {
+            stroke: #2c3e50;
+            stroke-width: 2;
+        }
+        
+        .zero-marker {
+            stroke: #2c3e50;
+            stroke-width: 2;
+            fill: white;
+        }
+        
+        .cardinality-label {
+            font-size: 11px;
+            fill: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .legend {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .legend h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            align-items: center;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .legend-symbol {
+            width: 80px;
+            height: 35px;
+        }
+        
+        .nf-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .nf-info h4 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+        
+        .nf-info ul {
+            margin-left: 20px;
+            color: #1b5e20;
+        }
+        
+        .nf-info li {
+            margin: 5px 0;
+        }
+        
+        .cardinality-table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .cardinality-table th,
+        .cardinality-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .cardinality-table th {
+            background: #3498db;
+            color: white;
+        }
+        
+        .cardinality-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .cardinality-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        /* Позиционирование сущностей */
+        #category { top: 50px; left: 50px; }
+        #product { top: 50px; left: 350px; }
+        #order-item { top: 50px; left: 750px; }
+        #order { top: 50px; left: 1100px; }
+        #customer { top: 420px; left: 750px; }
+        #address { top: 420px; left: 1100px; }
+        #payment-method { top: 420px; left: 350px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Логическая модель данных</h1>
+        <p class="subtitle">Веб-приложение «Накарабине» | Нотация Crow's Foot с детальной кардинальностью | 3НФ</p>
+        
+        <div class="diagram-container">
+            <div class="diagram">
+                <!-- SVG для связей с детальной кардинальностью -->
+                <svg class="connections" viewBox="0 0 1400 750">
+                    
+                    <!-- ===== 1. Категория (1,M) ↔ (1,1) Товар ===== -->
+                    <line class="connection-line" x1="250" y1="100" x2="350" y2="100"/>
+                    <!-- Категория: (1,M) - один ко многим, обязательно -->
+                    <!-- Сторона "один" (1,1) у Категории -->
+                    <line class="one-marker" x1="260" y1="90" x2="260" y2="110"/>
+                    <line class="one-marker" x1="270" y1="90" x2="270" y2="110"/>
+                    <!-- Сторона "много" (1,M) у Товара - crow's foot + обязательность -->
+                    <line class="crow-foot" x1="340" y1="100" x2="320" y2="85"/>
+                    <line class="crow-foot" x1="340" y1="100" x2="320" y2="100"/>
+                    <line class="crow-foot" x1="340" y1="100" x2="320" y2="115"/>
+                    <line class="one-marker" x1="315" y1="90" x2="315" y2="110"/>
+                    <!-- Подписи -->
+                    <text class="cardinality-label" x="255" y="80">1,1</text>
+                    <text class="cardinality-label" x="325" y="80">1,M</text>
+                    
+                    <!-- ===== 2. Товар (0,M) ↔ (1,1) Позиция_заказа ===== -->
+                    <line class="connection-line" x1="550" y1="140" x2="750" y2="140"/>
+                    <!-- Сторона Товара: (0,M) - ноль или много -->
+                    <circle class="zero-marker" cx="560" cy="140" r="6"/>
+                    <line class="one-marker" x1="575" y1="130" x2="575" y2="150"/>
+                    <!-- Сторона Позиции: (1,1) + crow's foot для "много" со стороны товара -->
+                    <line class="crow-foot" x1="740" y1="140" x2="720" y2="125"/>
+                    <line class="crow-foot" x1="740" y1="140" x2="720" y2="140"/>
+                    <line class="crow-foot" x1="740" y1="140" x2="720" y2="155"/>
+                    <line class="one-marker" x1="715" y1="130" x2="715" y2="150"/>
+                    <!-- Подписи -->
+                    <text class="cardinality-label" x="555" y="120">0,M</text>
+                    <text class="cardinality-label" x="725" y="120">1,1</text>
+                    
+                    <!-- ===== 3. Заказ (1,M) ↔ (1,1) Позиция_заказа ===== -->
+                    <line class="connection-line" x1="1100" y1="140" x2="970" y2="140"/>
+                    <!-- Сторона Заказа: (1,M) - один ко многим -->
+                    <line class="one-marker" x1="1090" y1="130" x2="1090" y2="150"/>
+                    <line class="one-marker" x1="1080" y1="130" x2="1080" y2="150"/>
+                    <!-- Сторона Позиции: crow's foot + (1,1) -->
+                    <line class="crow-foot" x1="980" y1="140" x2="1000" y2="125"/>
+                    <line class="crow-foot" x1="980" y1="140" x2="1000" y2="140"/>
+                    <line class="crow-foot" x1="980" y1="140" x2="1000" y2="155"/>
+                    <line class="one-marker" x1="1005" y1="130" x2="1005" y2="150"/>
+                    <!-- Подписи -->
+                    <text class="cardinality-label" x="1075" y="120">1,M</text>
+                    <text class="cardinality-label" x="985" y="120">1,1</text>
+                    
+                    <!-- ===== 4. Клиент (0,M) ↔ (1,1) Заказ ===== -->
+                    <path class="connection-line" d="M 870 420 Q 950 350 1100 280" fill="none"/>
+                    <!-- Сторона Клиента: (0,M) -->
+                    <circle class="zero-marker" cx="878" cy="412" r="6"/>
+                    <!-- Сторона Заказа: crow's foot -->
+                    <line class="crow-foot" x1="1095" y1="285" x2="1075" y2="270"/>
+                    <line class="crow-foot" x1="1095" y1="285" x2="1075" y2="285"/>
+                    <line class="crow-foot" x1="1095" y1="285" x2="1075" y2="300"/>
+                    <line class="one-marker" x1="1070" y1="275" x2="1070" y2="295"/>
+                    <!-- Подписи -->
+                    <text class="cardinality-label" x="860" y="400">0,M</text>
+                    <text class="cardinality-label" x="1050" y="265">1,1</text>
+                    
+                    <!-- ===== 5. Клиент (0,M) ↔ (1,1) Адрес_доставки ===== -->
+                    <line class="connection-line" x1="970" y1="500" x2="1100" y2="500"/>
+                    <!-- Сторона Клиента: (0,M) -->
+                    <circle class="zero-marker" cx="980" cy="500" r="6"/>
+                    <line class="one-marker" x1="995" y1="490" x2="995" y2="510"/>
+                    <!-- Сторона Адреса: crow's foot + (1,1) -->
+                    <line class="crow-foot" x1="1090" y1="500" x2="1070" y2="485"/>
+                    <line class="crow-foot" x1="1090" y1="500" x2="1070" y2="500"/>
+                    <line class="crow-foot" x1="1090" y1="500" x2="1070" y2="515"/>
+                    <line class="one-marker" x1="1065" y1="490" x2="1065" y2="510"/>
+                    <!-- Подписи -->
+                    <text class="cardinality-label" x="975" y="480">0,M</text>
+                    <text class="cardinality-label" x="1070" y="480">1,1</text>
+                    
+                    <!-- ===== 6. Адрес_доставки (0,M) ↔ (1,1) Заказ ===== -->
+                    <line class="connection-line" x1="1200" y1="420" x2="1200" y2="290"/>
+                    <!-- Сторона Адреса: (0,M) -->
+                    <circle class="zero-marker" cx="1200" cy="410" r="6"/>
+                    <line class="one-marker" x1="1190" y1="395" x2="1210" y2="395"/>
+                    <!-- Сторона Заказа: crow's foot -->
+                    <line class="crow-foot" x1="1200" y1="300" x2="1185" y2="320"/>
+                    <line class="crow-foot" x1="1200" y1="300" x2="1200" y2="320"/>
+                    <line class="crow-foot" x1="1200" y1="300" x2="1215" y2="320"/>
+                    <line class="one-marker" x1="1190" y1="325" x2="1210" y2="325"/>
+                    <!-- Подписи -->
+                    <text class="cardinality-label" x="1215" y="405">0,M</text>
+                    <text class="cardinality-label" x="1215" y="315">1,1</text>
+                    
+                    <!-- ===== 7. Способ_оплаты (0,M) ↔ (1,1) Заказ ===== -->
+                    <!-- Линия идёт от Способ_оплаты вверх и направо к Заказ -->
+                    <path class="connection-line" d="M 550 450 L 550 350 L 1100 350" fill="none"/>
+                    <!-- Сторона Способа оплаты: (0,M) -->
+                    <circle class="zero-marker" cx="550" cy="440" r="6"/>
+                    <line class="one-marker" x1="540" y1="425" x2="560" y2="425"/>
+                    <!-- Сторона Заказа: crow's foot + (1,1) -->
+                    <line class="crow-foot" x1="1090" y1="350" x2="1070" y2="335"/>
+                    <line class="crow-foot" x1="1090" y1="350" x2="1070" y2="350"/>
+                    <line class="crow-foot" x1="1090" y1="350" x2="1070" y2="365"/>
+                    <line class="one-marker" x1="1065" y1="340" x2="1065" y2="360"/>
+                    <!-- Подписи -->
+                    <text class="cardinality-label" x="535" y="470">0,M</text>
+                    <text class="cardinality-label" x="1070" y="330">1,1</text>
+                </svg>
+                
+                <!-- Сущность: Категория -->
+                <div class="entity" id="category">
+                    <div class="entity-header">Категория</div>
+                    <div class="entity-body">
+                        <div class="attribute">
+                            <span class="attr-name pk">id_категории</span>
+                            <span class="attr-type">INT</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">название</span>
+                            <span class="attr-type">VARCHAR(100)</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">описание</span>
+                            <span class="attr-type">TEXT</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Сущность: Товар -->
+                <div class="entity" id="product">
+                    <div class="entity-header">Товар</div>
+                    <div class="entity-body">
+                        <div class="attribute">
+                            <span class="attr-name pk">id_товара</span>
+                            <span class="attr-type">INT</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name fk">id_категории</span>
+                            <span class="attr-type">INT</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">название</span>
+                            <span class="attr-type">VARCHAR(200)</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">описание</span>
+                            <span class="attr-type">TEXT</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">цена</span>
+                            <span class="attr-type">DECIMAL(10,2)</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">кол_во_на_складе</span>
+                            <span class="attr-type">INT</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">фото_url</span>
+                            <span class="attr-type">VARCHAR(500)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Сущность: Позиция заказа -->
+                <div class="entity" id="order-item">
+                    <div class="entity-header">Позиция_заказа</div>
+                    <div class="entity-body">
+                        <div class="attribute">
+                            <span class="attr-name pk">id_позиции</span>
+                            <span class="attr-type">INT</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name fk">id_заказа</span>
+                            <span class="attr-type">INT</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name fk">id_товара</span>
+                            <span class="attr-type">INT</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">количество</span>
+                            <span class="attr-type">INT</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">цена_за_единицу</span>
+                            <span class="attr-type">DECIMAL(10,2)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Сущность: Заказ -->
+                <div class="entity" id="order">
+                    <div class="entity-header">Заказ</div>
+                    <div class="entity-body">
+                        <div class="attribute">
+                            <span class="attr-name pk">id_заказа</span>
+                            <span class="attr-type">INT</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name fk">id_клиента</span>
+                            <span class="attr-type">INT</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name fk">id_адреса</span>
+                            <span class="attr-type">INT</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name fk">id_способа_оплаты</span>
+                            <span class="attr-type">INT</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">дата_заказа</span>
+                            <span class="attr-type">DATETIME</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">статус</span>
+                            <span class="attr-type">VARCHAR(50)</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">итоговая_сумма</span>
+                            <span class="attr-type">DECIMAL(10,2)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Сущность: Способ оплаты -->
+                <div class="entity" id="payment-method">
+                    <div class="entity-header">Способ_оплаты</div>
+                    <div class="entity-body">
+                        <div class="attribute">
+                            <span class="attr-name pk">id_способа_оплаты</span>
+                            <span class="attr-type">INT</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">название</span>
+                            <span class="attr-type">VARCHAR(50)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Сущность: Клиент -->
+                <div class="entity" id="customer">
+                    <div class="entity-header">Клиент</div>
+                    <div class="entity-body">
+                        <div class="attribute">
+                            <span class="attr-name pk">id_клиента</span>
+                            <span class="attr-type">INT</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">фамилия</span>
+                            <span class="attr-type">VARCHAR(100)</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">имя</span>
+                            <span class="attr-type">VARCHAR(100)</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">отчество</span>
+                            <span class="attr-type">VARCHAR(100)</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">телефон</span>
+                            <span class="attr-type">VARCHAR(20)</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">email</span>
+                            <span class="attr-type">VARCHAR(150)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Сущность: Адрес -->
+                <div class="entity" id="address">
+                    <div class="entity-header">Адрес_доставки</div>
+                    <div class="entity-body">
+                        <div class="attribute">
+                            <span class="attr-name pk">id_адреса</span>
+                            <span class="attr-type">INT</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name fk">id_клиента</span>
+                            <span class="attr-type">INT</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">почтовый_индекс</span>
+                            <span class="attr-type">VARCHAR(10)</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">страна</span>
+                            <span class="attr-type">VARCHAR(100)</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">город</span>
+                            <span class="attr-type">VARCHAR(100)</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">улица</span>
+                            <span class="attr-type">VARCHAR(200)</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">дом</span>
+                            <span class="attr-type">VARCHAR(20)</span>
+                        </div>
+                        <div class="attribute">
+                            <span class="attr-name">квартира</span>
+                            <span class="attr-type">VARCHAR(20)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Легенда -->
+            <div class="legend">
+                <h3>📋 Легенда нотации Crow's Foot (с кардинальностью)</h3>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <svg class="legend-symbol" viewBox="0 0 80 35">
+                            <line x1="5" y1="17" x2="75" y2="17" stroke="#2c3e50" stroke-width="2"/>
+                            <line x1="15" y1="7" x2="15" y2="27" stroke="#2c3e50" stroke-width="2"/>
+                            <line x1="25" y1="7" x2="25" y2="27" stroke="#2c3e50" stroke-width="2"/>
+                        </svg>
+                        <span><strong>||</strong> — Один и только один (1,1)</span>
+                    </div>
+                    <div class="legend-item">
+                        <svg class="legend-symbol" viewBox="0 0 80 35">
+                            <line x1="5" y1="17" x2="75" y2="17" stroke="#2c3e50" stroke-width="2"/>
+                            <circle cx="15" cy="17" r="6" stroke="#2c3e50" stroke-width="2" fill="white"/>
+                            <line x1="30" y1="7" x2="30" y2="27" stroke="#2c3e50" stroke-width="2"/>
+                        </svg>
+                        <span><strong>O|</strong> — Ноль или один (0,1)</span>
+                    </div>
+                    <div class="legend-item">
+                        <svg class="legend-symbol" viewBox="0 0 80 35">
+                            <line x1="5" y1="17" x2="75" y2="17" stroke="#2c3e50" stroke-width="2"/>
+                            <line x1="70" y1="17" x2="55" y2="5" stroke="#2c3e50" stroke-width="2"/>
+                            <line x1="70" y1="17" x2="55" y2="17" stroke="#2c3e50" stroke-width="2"/>
+                            <line x1="70" y1="17" x2="55" y2="29" stroke="#2c3e50" stroke-width="2"/>
+                            <line x1="50" y1="7" x2="50" y2="27" stroke="#2c3e50" stroke-width="2"/>
+                        </svg>
+                        <span><strong>|&lt;</strong> — Один или много (1,M)</span>
+                    </div>
+                    <div class="legend-item">
+                        <svg class="legend-symbol" viewBox="0 0 80 35">
+                            <line x1="5" y1="17" x2="75" y2="17" stroke="#2c3e50" stroke-width="2"/>
+                            <line x1="70" y1="17" x2="55" y2="5" stroke="#2c3e50" stroke-width="2"/>
+                            <line x1="70" y1="17" x2="55" y2="17" stroke="#2c3e50" stroke-width="2"/>
+                            <line x1="70" y1="17" x2="55" y2="29" stroke="#2c3e50" stroke-width="2"/>
+                            <circle cx="45" cy="17" r="6" stroke="#2c3e50" stroke-width="2" fill="white"/>
+                        </svg>
+                        <span><strong>O&lt;</strong> — Ноль или много (0,M)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="pk" style="font-size: 0.9em;">🔑 id_...</span>
+                        <span>Первичный ключ (PK)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="fk" style="font-size: 0.9em;">🔗 id_...</span>
+                        <span>Внешний ключ (FK)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Таблица кардинальности -->
+            <div style="margin-top: 25px;">
+                <h3 style="color: #2c3e50; margin-bottom: 15px;">📊 Сводная таблица кардинальности связей</h3>
+                <table class="cardinality-table">
+                    <thead>
+                        <tr>
+                            <th>№</th>
+                            <th>Сущность A</th>
+                            <th>A → B</th>
+                            <th>Сущность B</th>
+                            <th>B → A</th>
+                            <th>Описание связи</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><strong>Категория</strong></td>
+                            <td style="color: #e74c3c; font-weight: bold;">(1, M)</td>
+                            <td><strong>Товар</strong></td>
+                            <td style="color: #27ae60; font-weight: bold;">(1, 1)</td>
+                            <td>Категория содержит много товаров; товар в одной категории</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><strong>Товар</strong></td>
+                            <td style="color: #e74c3c; font-weight: bold;">(0, M)</td>
+                            <td><strong>Позиция_заказа</strong></td>
+                            <td style="color: #27ae60; font-weight: bold;">(1, 1)</td>
+                            <td>Товар может быть в 0+ позициях; позиция = 1 товар</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td><strong>Заказ</strong></td>
+                            <td style="color: #e74c3c; font-weight: bold;">(1, M)</td>
+                            <td><strong>Позиция_заказа</strong></td>
+                            <td style="color: #27ae60; font-weight: bold;">(1, 1)</td>
+                            <td>Заказ содержит 1+ позиций; позиция в одном заказе</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td><strong>Клиент</strong></td>
+                            <td style="color: #e74c3c; font-weight: bold;">(0, M)</td>
+                            <td><strong>Заказ</strong></td>
+                            <td style="color: #27ae60; font-weight: bold;">(1, 1)</td>
+                            <td>Клиент может иметь 0+ заказов; заказ от одного клиента</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td><strong>Клиент</strong></td>
+                            <td style="color: #e74c3c; font-weight: bold;">(0, M)</td>
+                            <td><strong>Адрес_доставки</strong></td>
+                            <td style="color: #27ae60; font-weight: bold;">(1, 1)</td>
+                            <td>Клиент может иметь 0+ адресов; адрес одного клиента</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td><strong>Адрес_доставки</strong></td>
+                            <td style="color: #e74c3c; font-weight: bold;">(0, M)</td>
+                            <td><strong>Заказ</strong></td>
+                            <td style="color: #27ae60; font-weight: bold;">(1, 1)</td>
+                            <td>Адрес в 0+ заказах; заказ на один адрес</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td><strong>Способ_оплаты</strong></td>
+                            <td style="color: #e74c3c; font-weight: bold;">(0, M)</td>
+                            <td><strong>Заказ</strong></td>
+                            <td style="color: #27ae60; font-weight: bold;">(1, 1)</td>
+                            <td>Способ оплаты в 0+ заказах; заказ = 1 способ</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Информация о нормализации -->
+            <div class="nf-info">
+                <h4>✅ Модель приведена к третьей нормальной форме (3НФ)</h4>
+                <ul>
+                    <li><strong>1НФ:</strong> Все атрибуты атомарны (Ф.И.О. разделены, адрес декомпозирован)</li>
+                    <li><strong>2НФ:</strong> Все неключевые атрибуты полностью зависят от первичного ключа</li>
+                    <li><strong>3НФ:</strong> Нет транзитивных зависимостей — справочники вынесены в отдельные таблицы</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

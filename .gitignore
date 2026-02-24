@@ -1,0 +1,6 @@
+# Generated files
+SQL_Project/restaurant.db
+
+# OS
+.DS_Store
+Thumbs.db

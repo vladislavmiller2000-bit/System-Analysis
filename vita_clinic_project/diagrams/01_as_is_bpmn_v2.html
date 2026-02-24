@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AS-IS BPMN: Приём у врача в клинике "Вита"</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+        .diagram-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow-x: auto;
+        }
+        .diagram-title {
+            text-align: right;
+            color: #e67e22;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        /* SVG Diagram */
+        .bpmn-diagram {
+            width: 100%;
+            min-width: 1400px;
+            height: 750px;
+        }
+        
+        /* Pool styles */
+        .pool {
+            fill: white;
+            stroke: #333;
+            stroke-width: 2;
+        }
+        .pool-header {
+            fill: #2c3e50;
+        }
+        .pool-header.patient { fill: #3498db; }
+        .pool-header.admin { fill: #e67e22; }
+        .pool-header.doctor { fill: #27ae60; }
+        
+        .pool-label {
+            fill: white;
+            font-size: 14px;
+            font-weight: bold;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        
+        /* BPMN Elements */
+        .start-event {
+            fill: #d5f4e6;
+            stroke: #27ae60;
+            stroke-width: 3;
+        }
+        .end-event {
+            fill: #fadbd8;
+            stroke: #c0392b;
+            stroke-width: 5;
+        }
+        .intermediate-event {
+            fill: #fff;
+            stroke: #333;
+            stroke-width: 2;
+        }
+        .message-event {
+            fill: #f5eef8;
+            stroke: #9b59b6;
+            stroke-width: 2;
+        }
+        .timer-event {
+            fill: #e8f8f5;
+            stroke: #16a085;
+            stroke-width: 2;
+        }
+        .task {
+            fill: white;
+            stroke: #3498db;
+            stroke-width: 2;
+            rx: 10;
+        }
+        .task-label {
+            fill: #333;
+            font-size: 11px;
+            font-family: 'Segoe UI', sans-serif;
+            text-anchor: middle;
+        }
+        .gateway {
+            fill: white;
+            stroke: #f39c12;
+            stroke-width: 2;
+        }
+        
+        /* Flows */
+        .sequence-flow {
+            fill: none;
+            stroke: #333;
+            stroke-width: 1.5;
+            marker-end: url(#arrowhead);
+        }
+        .message-flow {
+            fill: none;
+            stroke: #333;
+            stroke-width: 1.5;
+            stroke-dasharray: 8, 4;
+            marker-end: url(#arrowhead-open);
+        }
+        
+        .flow-label {
+            fill: #666;
+            font-size: 10px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .event-label {
+            fill: #333;
+            font-size: 10px;
+            font-family: 'Segoe UI', sans-serif;
+            text-anchor: middle;
+        }
+        
+        .legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .legend h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+        .legend-line {
+            width: 40px;
+            height: 2px;
+        }
+        .legend-line.solid {
+            background: #333;
+        }
+        .legend-line.dashed {
+            background: repeating-linear-gradient(90deg, #333 0, #333 8px, transparent 8px, transparent 12px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 AS-IS BPMN Диаграмма</h1>
+        <p class="subtitle">Процесс "Приём у врача в медицинской клинике Вита" — Текущее состояние</p>
+        
+        <div class="diagram-container">
+            <div class="diagram-title">Медицинская клиника «Вита» имени Е.Л. Яницкой</div>
+            
+            <svg class="bpmn-diagram" viewBox="0 0 1400 700">
+                <!-- Definitions -->
+                <defs>
+                    <!-- Solid arrow for sequence flows -->
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+                    </marker>
+                    <!-- Open arrow for message flows -->
+                    <marker id="arrowhead-open" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="none" stroke="#333" stroke-width="1"/>
+                    </marker>
+                    <!-- Message envelope icon -->
+                    <symbol id="envelope" viewBox="0 0 20 14">
+                        <rect x="1" y="1" width="18" height="12" fill="none" stroke="#333" stroke-width="1.5"/>
+                        <polyline points="1,1 10,8 19,1" fill="none" stroke="#333" stroke-width="1.5"/>
+                    </symbol>
+                    <!-- Timer icon -->
+                    <symbol id="timer" viewBox="0 0 20 20">
+                        <circle cx="10" cy="10" r="8" fill="none" stroke="#333" stroke-width="1.5"/>
+                        <line x1="10" y1="10" x2="10" y2="5" stroke="#333" stroke-width="1.5"/>
+                        <line x1="10" y1="10" x2="14" y2="10" stroke="#333" stroke-width="1.5"/>
+                    </symbol>
+                </defs>
+                
+                <!-- ==================== POOL: ПАЦИЕНТ ==================== -->
+                <g id="pool-patient">
+                    <rect class="pool" x="10" y="10" width="1380" height="200"/>
+                    <rect class="pool-header patient" x="10" y="10" width="40" height="200"/>
+                    <text class="pool-label" x="30" y="120" transform="rotate(-90, 30, 120)">ПАЦИЕНТ</text>
+                    
+                    <!-- Start Event: Плохое самочувствие -->
+                    <circle class="start-event" cx="80" cy="110" r="18"/>
+                    <text class="event-label" x="80" y="145">Плохое</text>
+                    <text class="event-label" x="80" y="157">самочувствие</text>
+                    
+                    <!-- Task: Записаться на приём по телефону -->
+                    <rect class="task" x="130" y="80" width="110" height="60" rx="8"/>
+                    <text class="task-label" x="185" y="105">Записаться</text>
+                    <text class="task-label" x="185" y="120">на приём по</text>
+                    <text class="task-label" x="185" y="135">телефону</text>
+                    
+                    <!-- Sequence flow -->
+                    <path class="sequence-flow" d="M 98,110 L 130,110"/>
+                    
+                    <!-- Gateway: Есть свободное время? -->
+                    <rect class="gateway" x="265" y="90" width="30" height="30" transform="rotate(45, 280, 105)"/>
+                    <text class="flow-label" x="270" y="75">Есть</text>
+                    <text class="flow-label" x="255" y="87">свободное</text>
+                    <text class="flow-label" x="263" y="99">время?</text>
+                    <path class="sequence-flow" d="M 240,110 L 262,110"/>
+                    
+                    <!-- Branch: Нет свободного времени -->
+                    <text class="flow-label" x="305" y="60">Нет свободного</text>
+                    <text class="flow-label" x="320" y="72">времени</text>
+                    <path class="sequence-flow" d="M 280,90 L 280,50 L 340,50"/>
+                    
+                    <!-- Message Event: Записаться в другую клинику -->
+                    <circle class="message-event" cx="360" cy="50" r="15"/>
+                    <use href="#envelope" x="350" y="43" width="20" height="14"/>
+                    
+                    <!-- Task: Записаться на приём в другую клинику -->
+                    <rect class="task" x="390" y="25" width="120" height="50" rx="8"/>
+                    <text class="task-label" x="450" y="45">Записаться на приём</text>
+                    <text class="task-label" x="450" y="60">в другую клинику</text>
+                    <path class="sequence-flow" d="M 375,50 L 390,50"/>
+                    
+                    <!-- End Event (другая клиника) -->
+                    <circle class="end-event" cx="540" cy="50" r="15"/>
+                    <path class="sequence-flow" d="M 510,50 L 525,50"/>
+                    
+                    <!-- Branch: Записан на приём -->
+                    <text class="flow-label" x="305" y="150">Записан</text>
+                    <text class="flow-label" x="305" y="162">на приём</text>
+                    <path class="sequence-flow" d="M 280,120 L 280,170 L 340,170"/>
+                    
+                    <!-- Message Event: Записан на приём -->
+                    <circle class="message-event" cx="360" cy="170" r="15"/>
+                    <use href="#envelope" x="350" y="163" width="20" height="14"/>
+                    
+                    <!-- Intermediate Event: Записан на приём в другую клинику -->
+                    <circle class="intermediate-event" cx="440" cy="110" r="18"/>
+                    <circle cx="440" cy="110" r="14" fill="none" stroke="#333" stroke-width="1"/>
+                    <text class="event-label" x="440" y="145">Записан на приём</text>
+                    <text class="event-label" x="440" y="157">в другую клинику</text>
+                    <path class="sequence-flow" d="M 375,170 L 400,170 L 400,110 L 422,110"/>
+                    
+                    <!-- Message Event: Звонок для подтверждения -->
+                    <circle class="message-event" cx="520" cy="110" r="15"/>
+                    <use href="#envelope" x="510" y="103" width="20" height="14"/>
+                    <text class="event-label" x="520" y="145">Звонок для</text>
+                    <text class="event-label" x="520" y="157">подтверждения</text>
+                    <text class="event-label" x="520" y="169">записи</text>
+                    <path class="sequence-flow" d="M 458,110 L 505,110"/>
+                    
+                    <!-- Gateway: Подтвердить запись? -->
+                    <rect class="gateway" x="570" y="90" width="30" height="30" transform="rotate(45, 585, 105)"/>
+                    <text class="event-label" x="630" y="90">Подтвердить</text>
+                    <text class="event-label" x="630" y="102">запись?</text>
+                    <text class="event-label" x="585" y="77">×</text>
+                    <path class="sequence-flow" d="M 535,110 L 567,110"/>
+                    
+                    <!-- Branch: Да - Подтвердить -->
+                    <text class="flow-label" x="615" y="115">Да</text>
+                    <path class="sequence-flow" d="M 603,110 L 680,110"/>
+                    
+                    <!-- Task: Подтвердить запись -->
+                    <rect class="task" x="680" y="80" width="100" height="60" rx="8"/>
+                    <text class="task-label" x="730" y="105">Подтвердить</text>
+                    <text class="task-label" x="730" y="120">запись</text>
+                    
+                    <!-- Message Event: к врачу -->
+                    <circle class="message-event" cx="830" cy="110" r="15"/>
+                    <use href="#envelope" x="820" y="103" width="20" height="14"/>
+                    <path class="sequence-flow" d="M 780,110 L 815,110"/>
+                    
+                    <!-- Branch: Нет - Отменить -->
+                    <text class="flow-label" x="595" y="165">Нет</text>
+                    <path class="sequence-flow" d="M 585,120 L 585,170 L 880,170"/>
+                    
+                    <!-- Task: Отменить запись -->
+                    <rect class="task" x="880" y="140" width="100" height="60" rx="8"/>
+                    <text class="task-label" x="930" y="165">Отменить</text>
+                    <text class="task-label" x="930" y="180">запись</text>
+                    
+                    <!-- End Event: Запись отменена (пациент) -->
+                    <circle class="end-event" cx="1020" cy="170" r="15"/>
+                    <text class="event-label" x="1020" y="200">Запись отменена</text>
+                    <path class="sequence-flow" d="M 980,170 L 1005,170"/>
+                </g>
+                
+                <!-- ==================== POOL: АДМИНИСТРАТОР ==================== -->
+                <g id="pool-admin">
+                    <rect class="pool" x="10" y="220" width="1380" height="200"/>
+                    <rect class="pool-header admin" x="10" y="220" width="40" height="200"/>
+                    <text class="pool-label" x="30" y="340" transform="rotate(-90, 30, 340)">АДМИНИСТРАТОР</text>
+                    
+                    <!-- Message Start Event: Поступил звонок -->
+                    <circle class="message-event" cx="80" cy="320" r="18"/>
+                    <use href="#envelope" x="70" y="313" width="20" height="14"/>
+                    <text class="event-label" x="80" y="355">Поступил</text>
+                    <text class="event-label" x="80" y="367">звонок</text>
+                    
+                    <!-- Task: Найти свободное время -->
+                    <rect class="task" x="130" y="290" width="120" height="60" rx="8"/>
+                    <text class="task-label" x="190" y="313">Найти свободное</text>
+                    <text class="task-label" x="190" y="328">время для записи</text>
+                    <text class="task-label" x="190" y="343">на приём</text>
+                    <path class="sequence-flow" d="M 98,320 L 130,320"/>
+                    
+                    <!-- Gateway check -->
+                    <circle class="timer-event" cx="290" cy="270" r="15"/>
+                    <use href="#timer" x="280" y="260" width="20" height="20"/>
+                    <text class="flow-label" x="260" y="255">Нет</text>
+                    <text class="flow-label" x="250" y="267">свободного</text>
+                    <text class="flow-label" x="258" y="279">времени</text>
+                    <path class="sequence-flow" d="M 190,290 L 190,270 L 275,270"/>
+                    
+                    <!-- Task: Записать пациента -->
+                    <rect class="task" x="300" y="290" width="120" height="60" rx="8"/>
+                    <text class="task-label" x="360" y="315">Записать пациента</text>
+                    <text class="task-label" x="360" y="330">на приём</text>
+                    <path class="sequence-flow" d="M 250,320 L 300,320"/>
+                    
+                    <!-- Timer Event: 1 день до приёма -->
+                    <circle class="timer-event" cx="470" cy="320" r="18"/>
+                    <use href="#timer" x="460" y="310" width="20" height="20"/>
+                    <text class="event-label" x="470" y="355">1 день</text>
+                    <text class="event-label" x="470" y="367">до назначенного</text>
+                    <text class="event-label" x="470" y="379">приёма</text>
+                    <path class="sequence-flow" d="M 420,320 L 452,320"/>
+                    
+                    <!-- Task: Подтвердить запись по телефону -->
+                    <rect class="task" x="520" y="290" width="130" height="60" rx="8"/>
+                    <text class="task-label" x="585" y="315">Подтвердить запись</text>
+                    <text class="task-label" x="585" y="330">по телефону</text>
+                    <path class="sequence-flow" d="M 488,320 L 520,320"/>
+                    
+                    <!-- Gateway: Запись подтверждена? -->
+                    <rect class="gateway" x="685" y="300" width="30" height="30" transform="rotate(45, 700, 315)"/>
+                    <text class="event-label" x="700" y="360">Запись</text>
+                    <text class="event-label" x="700" y="372">подтверждена?</text>
+                    <path class="sequence-flow" d="M 650,320 L 682,320"/>
+                    
+                    <!-- Branch: Да -->
+                    <text class="flow-label" x="730" y="285">Да</text>
+                    <path class="sequence-flow" d="M 700,300 L 700,270 L 780,270"/>
+                    
+                    <!-- Message Event: Запись подтверждена -->
+                    <circle class="message-event" cx="800" cy="270" r="15"/>
+                    <use href="#envelope" x="790" y="263" width="20" height="14"/>
+                    <text class="event-label" x="800" y="300">Запись</text>
+                    <text class="event-label" x="800" y="312">подтверждена</text>
+                    
+                    <!-- Sequence Flow: Запись подтверждена → Врач (Пациент пришёл) -->
+                    <!-- Это поток операций внутри одного пула (между дорожками) -->
+                    <path class="sequence-flow" d="M 815,270 L 850,270 L 850,420 L 62,420 L 62,520"/>
+                    
+                    <!-- Branch: Нет -->
+                    <text class="flow-label" x="730" y="345">Нет</text>
+                    <path class="sequence-flow" d="M 718,320 L 780,320 L 780,380 L 830,380"/>
+                    
+                    <!-- Message Event: Запись отменена -->
+                    <circle class="message-event" cx="850" cy="380" r="15"/>
+                    <use href="#envelope" x="840" y="373" width="20" height="14"/>
+                    <text class="event-label" x="850" y="410">Запись отменена</text>
+                    
+                    <!-- End Event: Запись отменена -->
+                    <circle class="end-event" cx="940" cy="380" r="15"/>
+                    <text class="event-label" x="940" y="410">Запись отменена</text>
+                    <path class="sequence-flow" d="M 865,380 L 925,380"/>
+                </g>
+                
+                <!-- ==================== POOL: ВРАЧ ==================== -->
+                <g id="pool-doctor">
+                    <rect class="pool" x="10" y="430" width="1380" height="180"/>
+                    <rect class="pool-header doctor" x="10" y="430" width="40" height="180"/>
+                    <text class="pool-label" x="30" y="530" transform="rotate(-90, 30, 530)">ВРАЧ</text>
+                    
+                    <!-- Message Event: Пациент пришёл -->
+                    <circle class="message-event" cx="80" cy="520" r="18"/>
+                    <use href="#envelope" x="70" y="513" width="20" height="14"/>
+                    <text class="event-label" x="80" y="555">Пациент</text>
+                    <text class="event-label" x="80" y="567">пришёл на приём</text>
+                    
+                    <!-- Task: Принять пациента -->
+                    <rect class="task" x="130" y="490" width="100" height="60" rx="8"/>
+                    <text class="task-label" x="180" y="515">Принять</text>
+                    <text class="task-label" x="180" y="530">пациента</text>
+                    <path class="sequence-flow" d="M 98,520 L 130,520"/>
+                    
+                    <!-- Task: Принять на приём -->
+                    <rect class="task" x="260" y="490" width="100" height="60" rx="8"/>
+                    <text class="task-label" x="310" y="515">Принять</text>
+                    <text class="task-label" x="310" y="530">на приём</text>
+                    <path class="sequence-flow" d="M 230,520 L 260,520"/>
+                    
+                    <!-- Task: Составить диагноз -->
+                    <rect class="task" x="390" y="490" width="100" height="60" rx="8"/>
+                    <text class="task-label" x="440" y="515">Составить</text>
+                    <text class="task-label" x="440" y="530">диагноз</text>
+                    <path class="sequence-flow" d="M 360,520 L 390,520"/>
+                    
+                    <!-- Message Event: Диагноз поставлен -->
+                    <circle class="message-event" cx="530" cy="520" r="15"/>
+                    <use href="#envelope" x="520" y="513" width="20" height="14"/>
+                    <text class="event-label" x="530" y="555">Диагноз</text>
+                    <text class="event-label" x="530" y="567">поставлен</text>
+                    <path class="sequence-flow" d="M 490,520 L 515,520"/>
+                    
+                    <!-- Task: Назначить лечение -->
+                    <rect class="task" x="580" y="490" width="100" height="60" rx="8"/>
+                    <text class="task-label" x="630" y="515">Назначить</text>
+                    <text class="task-label" x="630" y="530">лечение</text>
+                    <path class="sequence-flow" d="M 545,520 L 580,520"/>
+                    
+                    <!-- Task: Оформить протокол осмотра -->
+                    <rect class="task" x="710" y="490" width="110" height="60" rx="8"/>
+                    <text class="task-label" x="765" y="510">Оформить</text>
+                    <text class="task-label" x="765" y="525">протокол</text>
+                    <text class="task-label" x="765" y="540">осмотра</text>
+                    <path class="sequence-flow" d="M 680,520 L 710,520"/>
+                    
+                    <!-- End Event: Приём завершён -->
+                    <circle class="end-event" cx="860" cy="520" r="18" style="stroke: #27ae60;"/>
+                    <text class="event-label" x="860" y="555">Приём</text>
+                    <text class="event-label" x="860" y="567">завершён</text>
+                    <path class="sequence-flow" d="M 820,520 L 842,520"/>
+                </g>
+                
+                <!-- ==================== MESSAGE FLOWS (пунктирные линии) ==================== -->
+                
+                <!-- Пациент → Администратор: звонок -->
+                <path class="message-flow" d="M 185,140 L 185,200 L 80,200 L 80,302"/>
+                <circle cx="80" cy="200" r="5" fill="white" stroke="#333" stroke-width="1.5"/>
+                
+                <!-- Администратор → Пациент: нет времени -->
+                <path class="message-flow" d="M 290,255 L 290,230 L 360,230 L 360,65"/>
+                <circle cx="290" cy="230" r="5" fill="white" stroke="#333" stroke-width="1.5"/>
+                
+                <!-- Администратор → Пациент: записан -->
+                <path class="message-flow" d="M 360,290 L 360,185"/>
+                <circle cx="360" cy="220" r="5" fill="white" stroke="#333" stroke-width="1.5"/>
+                
+                <!-- Администратор → Пациент: звонок для подтверждения -->
+                <path class="message-flow" d="M 585,290 L 585,220 L 520,220 L 520,125"/>
+                <circle cx="585" cy="220" r="5" fill="white" stroke="#333" stroke-width="1.5"/>
+                
+                <!-- Пациент → Администратор: подтверждение -->
+                <path class="message-flow" d="M 730,140 L 730,200 L 800,200 L 800,255"/>
+                <circle cx="730" cy="200" r="5" fill="white" stroke="#333" stroke-width="1.5"/>
+                
+                <!-- Пациент → Администратор: отмена -->
+                <path class="message-flow" d="M 930,200 L 930,230 L 850,230 L 850,365"/>
+                <circle cx="930" cy="230" r="5" fill="white" stroke="#333" stroke-width="1.5"/>
+                
+                <!-- УДАЛЕНО: Message Flow Пациент → Врач заменён на Sequence Flow от Администратора -->
+                <!-- Теперь поток идёт: Администратор (Запись подтверждена) → Врач (Пациент пришёл) -->
+                
+            </svg>
+            
+            <!-- Легенда -->
+            <div class="legend">
+                <h3>📖 Легенда BPMN</h3>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <svg width="30" height="30"><circle cx="15" cy="15" r="12" fill="#d5f4e6" stroke="#27ae60" stroke-width="3"/></svg>
+                        <span>Начальное событие</span>
+                    </div>
+                    <div class="legend-item">
+                        <svg width="30" height="30"><circle cx="15" cy="15" r="10" fill="#fadbd8" stroke="#c0392b" stroke-width="5"/></svg>
+                        <span>Конечное событие</span>
+                    </div>
+                    <div class="legend-item">
+                        <svg width="80" height="40"><rect x="5" y="5" width="70" height="30" rx="8" fill="white" stroke="#3498db" stroke-width="2"/><text x="40" y="24" text-anchor="middle" font-size="10">Задача</text></svg>
+                        <span>Задача (Task)</span>
+                    </div>
+                    <div class="legend-item">
+                        <svg width="30" height="30"><rect x="5" y="5" width="20" height="20" fill="white" stroke="#f39c12" stroke-width="2" transform="rotate(45, 15, 15)"/></svg>
+                        <span>Шлюз (Gateway)</span>
+                    </div>
+                    <div class="legend-item">
+                        <svg width="30" height="30"><circle cx="15" cy="15" r="12" fill="#f5eef8" stroke="#9b59b6" stroke-width="2"/><text x="15" y="20" text-anchor="middle" font-size="10">✉</text></svg>
+                        <span>Событие-сообщение</span>
+                    </div>
+                    <div class="legend-item">
+                        <svg width="30" height="30"><circle cx="15" cy="15" r="12" fill="#e8f8f5" stroke="#16a085" stroke-width="2"/><text x="15" y="20" text-anchor="middle" font-size="10">⏰</text></svg>
+                        <span>Таймер</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line solid"></div>
+                        <span>Поток управления (Sequence Flow)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line dashed"></div>
+                        <span>Поток сообщений (Message Flow)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

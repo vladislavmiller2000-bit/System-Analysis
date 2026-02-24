@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Раскадровка — Медицинская клиника (Прототип)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f0f0f0;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  h1.page-title {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #555;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  /* === STORYBOARD GRID === */
+  .storyboard {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    justify-content: center;
+    max-width: 1600px;
+  }
+
+  /* === ARROWS BETWEEN SCREENS === */
+  .flow-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+  .flow-label {
+    font-size: 11px;
+    color: #999;
+    font-style: italic;
+    background: #e8e8e8;
+    padding: 3px 10px;
+    border-radius: 10px;
+    margin-bottom: 4px;
+  }
+  .flow-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .flow-arrow {
+    font-size: 28px;
+    color: #bbb;
+    flex-shrink: 0;
+  }
+
+  /* === PHONE FRAME === */
+  .phone-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .screen-label {
+    font-size: 11px;
+    color: #4CAF50;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  .phone {
+    width: 280px;
+    height: 520px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 2px solid #e0e0e0;
+    position: relative;
+    cursor: pointer;
+    transition: box-shadow 0.2s, transform 0.15s;
+  }
+  .phone:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    transform: translateY(-2px);
+  }
+
+  /* status bar */
+  .status-bar {
+    height: 24px;
+    background: #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #999;
+    flex-shrink: 0;
+  }
+
+  /* content area */
+  .content {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #fafafa;
+  }
+
+  /* bottom nav */
+  .bottom-nav {
+    height: 56px;
+    background: #fff;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    flex-shrink: 0;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-size: 9px;
+    color: #999;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-radius: 0;
+    text-decoration: none;
+  }
+  .nav-item:hover {
+    background: #f5f5f5;
+  }
+  .nav-item.active {
+    color: #333;
+    font-weight: 600;
+    background: #f0f0f0;
+  }
+  .nav-icon {
+    font-size: 18px;
+  }
+
+  /* === UI ELEMENTS === */
+  .screen-title {
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    margin: 4px 0;
+  }
+  .screen-title-left {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 4px 0;
+  }
+  .back-btn {
+    font-size: 20px;
+    color: #666;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.15s;
+  }
+  .back-btn:hover {
+    background: #eee;
+  }
+  .top-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* input field */
+  .input-field {
+    border: 1.5px solid #ccc;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #888;
+    background: #fff;
+  }
+  .input-label {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: -8px;
+    font-weight: 500;
+  }
+
+  /* dropdown */
+  .dropdown {
+    border: 1.5px solid #ccc;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #555;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .dropdown::after {
+    content: "▾";
+    color: #999;
+    font-size: 14px;
+  }
+
+  /* button */
+  .btn-primary {
+    background: #c8e6ff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 14px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 600;
+    color: #333;
+    transition: background 0.15s;
+  }
+  .btn-primary:hover {
+    background: #a8d4ff;
+  }
+  .btn-secondary {
+    background: #f0f0f0;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 13px;
+    text-align: center;
+    cursor: pointer;
+    color: #555;
+    transition: background 0.15s;
+  }
+  .btn-secondary:hover {
+    background: #e0e0e0;
+  }
+
+  /* card */
+  .card {
+    background: #fff;
+    border: 1.5px solid #e8e8e8;
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .card-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  /* photo placeholder */
+  .photo-placeholder {
+    background: #fff;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .photo-sm {
+    width: 48px;
+    height: 48px;
+  }
+  .photo-md {
+    width: 80px;
+    height: 80px;
+  }
+  .photo-lg {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+  }
+  .photo-news {
+    width: 100%;
+    height: 100px;
+  }
+
+  /* logo */
+  .logo-placeholder {
+    width: 80px;
+    height: 60px;
+    background: #fff;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    font-size: 12px;
+    margin: 0 auto;
+  }
+
+  /* avatar */
+  .avatar-large {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: #bbb;
+    margin: 0 auto;
+  }
+
+  /* text styles */
+  .text-heading {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+  }
+  .text-body {
+    font-size: 11px;
+    color: #777;
+  }
+  .text-small {
+    font-size: 10px;
+    color: #aaa;
+  }
+  .text-link {
+    font-size: 12px;
+    color: #5b9bd5;
+    text-decoration: underline;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  /* status badge */
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+  }
+  .badge-confirmed {
+    background: #e8f5e9;
+    color: #4CAF50;
+  }
+  .badge-pending {
+    background: #fff3e0;
+    color: #FF9800;
+  }
+
+  /* search bar */
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .search-icon, .filter-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    color: #888;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .search-icon:hover, .filter-icon:hover {
+    background: #e0e0e0;
+  }
+
+  /* OTP input */
+  .otp-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+  .otp-box {
+    width: 40px;
+    height: 48px;
+    border: 1.5px solid #ccc;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #999;
+    background: #fff;
+  }
+
+  /* success icon */
+  .success-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #e8f5e9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: #4CAF50;
+    margin: 0 auto;
+  }
+
+  /* news card */
+  .news-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* divider */
+  .divider {
+    height: 1px;
+    background: #eee;
+    margin: 4px 0;
+  }
+
+  /* Section headers */
+  .section-divider {
+    width: 100%;
+    text-align: center;
+    padding: 18px 0 8px;
+  }
+  .section-divider h2 {
+    font-size: 16px;
+    color: #666;
+    font-weight: 600;
+  }
+  .section-divider p {
+    font-size: 12px;
+    color: #aaa;
+  }
+
+  /* Scrollbar styling */
+  .content::-webkit-scrollbar {
+    width: 3px;
+  }
+  .content::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 2px;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #777;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .dot-existing { background: #c8e6c9; }
+  .dot-fill { background: #fff3e0; }
+  .dot-new { background: #e3f2fd; }
+  .dot-error { background: #ffcdd2; }
+
+  /* error styles */
+  .error-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #ffebee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: #e53935;
+    margin: 0 auto;
+  }
+  .input-field-error {
+    border: 1.5px solid #e53935;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #888;
+    background: #fff5f5;
+  }
+  .otp-box-error {
+    width: 40px;
+    height: 48px;
+    border: 1.5px solid #e53935;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #e53935;
+    background: #fff5f5;
+  }
+  .error-text {
+    font-size: 12px;
+    color: #e53935;
+    text-align: center;
+  }
+  .badge-error {
+    background: #ffebee;
+    color: #e53935;
+  }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">Раскадровка — Мобильное приложение медицинской клиники</h1>
+<p class="subtitle">Интерактивный прототип · 12 вайрфреймов · Кликабельная навигация</p>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot dot-existing"></div> Готовые экраны</div>
+  <div class="legend-item"><div class="legend-dot dot-fill"></div> Нужно наполнить</div>
+  <div class="legend-item"><div class="legend-dot dot-new"></div> Новые экраны</div>
+  <div class="legend-item"><div class="legend-dot dot-error"></div> Экраны ошибок</div>
+</div>
+
+<!-- ===================== FLOW 1: ГЛАВНАЯ ===================== -->
+<div class="section-divider">
+  <h2>Поток 1: Главная</h2>
+</div>
+
+<div class="storyboard">
+
+<!-- SCREEN 0: Главная -->
+<div class="phone-wrapper">
+  <span class="screen-label">0 · Главная</span>
+  <div class="phone" id="screen-0">
+    <div class="status-bar">9:41</div>
+    <div class="content">
+      <div class="logo-placeholder">Logo</div>
+      <div class="news-card">
+        <div class="photo-placeholder photo-news">Photo</div>
+        <div class="text-heading">Заголовок новости</div>
+        <div class="text-body">Описание новости клиники, актуальная информация для пациентов</div>
+      </div>
+      <div class="news-card">
+        <div class="photo-placeholder photo-news">Photo</div>
+        <div class="text-heading">Заголовок новости</div>
+        <div class="text-body">Описание новости</div>
+      </div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-item active"><span class="nav-icon">🏠</span>Главная</div>
+      <div class="nav-item" onclick="scrollTo('#screen-11')"><span class="nav-icon">📅</span>Записаться</div>
+      <div class="nav-item" onclick="scrollTo('#screen-8')"><span class="nav-icon">👨‍⚕️</span>Врачи</div>
+      <div class="nav-item" onclick="scrollTo('#screen-4')"><span class="nav-icon">📋</span>Мои записи</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- ===================== FLOW 2: МОИ ЗАПИСИ ===================== -->
+<div class="section-divider">
+  <h2>Поток 2: Мои записи</h2>
+  <p>Главная → Ввод телефона → OTP → Личный кабинет → Записи</p>
+</div>
+
+<div class="storyboard">
+
+<!-- SCREEN 4: Auth - phone input -->
+<div class="phone-wrapper">
+  <span class="screen-label">4 · Ввод данных пользователя</span>
+  <div class="phone" id="screen-4" style="border-color: #c8e6c9;">
+    <div class="status-bar">9:41</div>
+    <div class="content" style="justify-content: center; gap: 16px;">
+      <div class="screen-title">Авторизация</div>
+      <div style="height: 40px;"></div>
+      <div class="input-label">Телефон</div>
+      <div class="input-field">+7 (xxx) xxx xx xx</div>
+      <div class="btn-primary" onclick="scrollTo('#screen-5')">Получить код</div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="scrollTo('#screen-0')"><span class="nav-icon">🏠</span>Главная</div>
+      <div class="nav-item" onclick="scrollTo('#screen-11')"><span class="nav-icon">📅</span>Записаться</div>
+      <div class="nav-item" onclick="scrollTo('#screen-8')"><span class="nav-icon">👨‍⚕️</span>Врачи</div>
+      <div class="nav-item active"><span class="nav-icon">📋</span>Мои записи</div>
+    </div>
+  </div>
+</div>
+
+<div class="flow-arrow">→</div>
+
+<!-- SCREEN 5: OTP input -->
+<div class="phone-wrapper">
+  <span class="screen-label" style="color: #2196F3;">5 · Ввод OTP ✦ новый</span>
+  <div class="phone" id="screen-5" style="border-color: #bbdefb;">
+    <div class="status-bar">9:41</div>
+    <div class="content" style="gap: 16px;">
+      <div class="top-row">
+        <div class="back-btn" onclick="scrollTo('#screen-4')">‹</div>
+      </div>
+      <div class="screen-title">Введите код</div>
+      <div class="text-body" style="text-align: center; margin-top: 8px;">
+        Мы отправили SMS с кодом<br>на номер +7 (xxx) xxx xx xx
+      </div>
+      <div style="height: 20px;"></div>
+      <div class="otp-row">
+        <div class="otp-box">_</div>
+        <div class="otp-box">_</div>
+        <div class="otp-box">_</div>
+        <div class="otp-box">_</div>
+      </div>
+      <div style="height: 12px;"></div>
+      <div class="btn-primary" onclick="scrollTo('#screen-6')">Подтвердить</div>
+      <div class="text-link">Отправить код повторно</div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="scrollTo('#screen-0')"><span class="nav-icon">🏠</span>Главная</div>
+      <div class="nav-item" onclick="scrollTo('#screen-11')"><span class="nav-icon">📅</span>Записаться</div>
+      <div class="nav-item" onclick="scrollTo('#screen-8')"><span class="nav-icon">👨‍⚕️</span>Врачи</div>
+      <div class="nav-item active"><span class="nav-icon">📋</span>Мои записи</div>
+    </div>
+  </div>
+</div>
+
+<div class="flow-arrow" style="color: #e53935;">⤳</div>
+
+<!-- SCREEN 5a: OTP Error -->
+<div class="phone-wrapper">
+  <span class="screen-label" style="color: #e53935;">5а · Ошибка OTP ✦ ошибка</span>
+  <div class="phone" id="screen-5a" style="border-color: #ffcdd2;">
+    <div class="status-bar">9:41</div>
+    <div class="content" style="gap: 16px;">
+      <div class="top-row">
+        <div class="back-btn" onclick="scrollTo('#screen-4')">‹</div>
+      </div>
+      <div class="screen-title">Введите код</div>
+      <div class="text-body" style="text-align: center; margin-top: 8px;">
+        Мы отправили SMS с кодом<br>на номер +7 (xxx) xxx xx xx
+      </div>
+      <div style="height: 12px;"></div>
+      <div class="otp-row">
+        <div class="otp-box-error">1</div>
+        <div class="otp-box-error">2</div>
+        <div class="otp-box-error">3</div>
+        <div class="otp-box-error">4</div>
+      </div>
+      <div class="error-text">Неверный код. Проверьте SMS и попробуйте ещё раз</div>
+      <div style="height: 4px;"></div>
+      <div class="btn-primary" onclick="scrollTo('#screen-5')">Попробовать снова</div>
+      <div class="text-link" onclick="scrollTo('#screen-5')">Отправить код повторно</div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="scrollTo('#screen-0')"><span class="nav-icon">🏠</span>Главная</div>
+      <div class="nav-item" onclick="scrollTo('#screen-11')"><span class="nav-icon">📅</span>Записаться</div>
+      <div class="nav-item" onclick="scrollTo('#screen-8')"><span class="nav-icon">👨‍⚕️</span>Врачи</div>
+      <div class="nav-item active"><span class="nav-icon">📋</span>Мои записи</div>
+    </div>
+  </div>
+</div>
+
+<div class="flow-arrow">→</div>
+
+<!-- SCREEN 6: User profile -->
+<div class="phone-wrapper">
+  <span class="screen-label" style="color: #2196F3;">6 · Данные пользователя ✦ новый</span>
+  <div class="phone" id="screen-6" style="border-color: #bbdefb;">
+    <div class="status-bar">9:41</div>
+    <div class="content" style="gap: 14px;">
+      <div class="top-row">
+        <div class="back-btn" onclick="scrollTo('#screen-5')">‹</div>
+      </div>
+      <div class="screen-title">Личный кабинет</div>
+      <div class="avatar-large">👤</div>
+      <div style="text-align: center;">
+        <div class="text-heading" style="font-size: 15px;">Петрова Анна Сергеевна</div>
+        <div class="text-body" style="margin-top: 4px;">+7 (912) 345 67 89</div>
+      </div>
+      <div class="divider"></div>
+      <div class="btn-primary" onclick="scrollTo('#screen-7')">📋  Мои записи</div>
+      <div class="btn-secondary">Выйти</div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="scrollTo('#screen-0')"><span class="nav-icon">🏠</span>Главная</div>
+      <div class="nav-item" onclick="scrollTo('#screen-11')"><span class="nav-icon">📅</span>Записаться</div>
+      <div class="nav-item" onclick="scrollTo('#screen-8')"><span class="nav-icon">👨‍⚕️</span>Врачи</div>
+      <div class="nav-item active"><span class="nav-icon">📋</span>Мои записи</div>
+    </div>
+  </div>
+</div>
+
+<div class="flow-arrow">→</div>
+
+<!-- SCREEN 7: Appointments list -->
+<div class="phone-wrapper">
+  <span class="screen-label" style="color: #2196F3;">7 · Записи на приём ✦ новый</span>
+  <div class="phone" id="screen-7" style="border-color: #bbdefb;">
+    <div class="status-bar">9:41</div>
+    <div class="content" style="gap: 10px;">
+      <div class="top-row">
+        <div class="back-btn" onclick="scrollTo('#screen-6')">‹</div>
+        <div class="screen-title-left">Мои записи</div>
+      </div>
+      <!-- Appointment card 1 -->
+      <div class="card">
+        <div class="card-row">
+          <div class="photo-placeholder photo-sm">Photo</div>
+          <div>
+            <div class="text-heading">Иванов И.И.</div>
+            <div class="text-body">Терапевт</div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="text-body">📅 15.03.2026, 10:00</div>
+        <div class="text-body">📍 Клиника на Ленина, 10</div>
+        <div><span class="badge badge-confirmed">Подтверждена</span></div>
+      </div>
+      <!-- Appointment card 2 -->
+      <div class="card">
+        <div class="card-row">
+          <div class="photo-placeholder photo-sm">Photo</div>
+          <div>
+            <div class="text-heading">Сидорова Е.В.</div>
+            <div class="text-body">Офтальмолог</div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="text-body">📅 22.03.2026, 14:30</div>
+        <div class="text-body">📍 Клиника на Мира, 5</div>
+        <div><span class="badge badge-pending">Ожидает</span></div>
+      </div>
+      <!-- Appointment card 3 -->
+      <div class="card">
+        <div class="card-row">
+          <div class="photo-placeholder photo-sm">Photo</div>
+          <div>
+            <div class="text-heading">Козлов А.П.</div>
+            <div class="text-body">Хирург</div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="text-body">📅 01.04.2026, 09:00</div>
+        <div class="text-body">📍 Клиника на Ленина, 10</div>
+        <div><span class="badge badge-confirmed">Подтверждена</span></div>
+      </div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="scrollTo('#screen-0')"><span class="nav-icon">🏠</span>Главная</div>
+      <div class="nav-item" onclick="scrollTo('#screen-11')"><span class="nav-icon">📅</span>Записаться</div>
+      <div class="nav-item" onclick="scrollTo('#screen-8')"><span class="nav-icon">👨‍⚕️</span>Врачи</div>
+      <div class="nav-item active"><span class="nav-icon">📋</span>Мои записи</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- ===================== FLOW 3: ВРАЧИ ===================== -->
+<div class="section-divider">
+  <h2>Поток 3: Врачи</h2>
+  <p>Главная → Список врачей → Карточка врача / Поиск</p>
+</div>
+
+<div class="storyboard">
+
+<!-- SCREEN 8: Doctors list -->
+<div class="phone-wrapper">
+  <span class="screen-label" style="color: #FF9800;">8 · Список врачей ✦ наполнить</span>
+  <div class="phone" id="screen-8" style="border-color: #ffe0b2;">
+    <div class="status-bar">9:41</div>
+    <div class="content" style="gap: 10px;">
+      <div class="screen-title">Наши врачи</div>
+      <div class="search-bar">
+        <div class="input-field" style="flex: 1; font-size: 12px;">🔍 Поиск врача...</div>
+        <div class="filter-icon" onclick="scrollTo('#screen-10')" title="Фильтры">⚙</div>
+      </div>
+      <!-- Doctor card 1 -->
+      <div class="card" onclick="scrollTo('#screen-9')" style="cursor: pointer;">
+        <div class="card-row">
+          <div class="photo-placeholder photo-sm">Photo</div>
+          <div>
+            <div class="text-heading">Иванов И.И.</div>
+            <div class="text-body">Терапевт</div>
+            <div class="text-small">📍 Клиника на Ленина, 10</div>
+          </div>
+        </div>
+      </div>
+      <!-- Doctor card 2 -->
+      <div class="card" onclick="scrollTo('#screen-9')" style="cursor: pointer;">
+        <div class="card-row">
+          <div class="photo-placeholder photo-sm">Photo</div>
+          <div>
+            <div class="text-heading">Сидорова Е.В.</div>
+            <div class="text-body">Офтальмолог</div>
+            <div class="text-small">📍 Клиника на Мира, 5</div>
+          </div>
+        </div>
+      </div>
+      <!-- Doctor card 3 -->
+      <div class="card" onclick="scrollTo('#screen-9')" style="cursor: pointer;">
+        <div class="card-row">
+          <div class="photo-placeholder photo-sm">Photo</div>
+          <div>
+            <div class="text-heading">Козлов А.П.</div>
+            <div class="text-body">Хирург</div>
+            <div class="text-small">📍 Клиника на Ленина, 10</div>
+          </div>
+        </div>
+      </div>
+      <!-- Doctor card 4 -->
+      <div class="card" onclick="scrollTo('#screen-9')" style="cursor: pointer;">
+        <div class="card-row">
+          <div class="photo-placeholder photo-sm">Photo</div>
+          <div>
+            <div class="text-heading">Морозова Т.К.</div>
+            <div class="text-body">Кардиолог</div>
+            <div class="text-small">📍 Клиника на Мира, 5</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="scrollTo('#screen-0')"><span class="nav-icon">🏠</span>Главная</div>
+      <div class="nav-item" onclick="scrollTo('#screen-11')"><span class="nav-icon">📅</span>Записаться</div>
+      <div class="nav-item active"><span class="nav-icon">👨‍⚕️</span>Врачи</div>
+      <div class="nav-item" onclick="scrollTo('#screen-4')"><span class="nav-icon">📋</span>Мои записи</div>
+    </div>
+  </div>
+</div>
+
+<div class="flow-arrow">→</div>
+
+<!-- SCREEN 9: Doctor detail -->
+<div class="phone-wrapper">
+  <span class="screen-label" style="color: #2196F3;">9 · Данные врача ✦ новый</span>
+  <div class="phone" id="screen-9" style="border-color: #bbdefb;">
+    <div class="status-bar">9:41</div>
+    <div class="content" style="gap: 12px;">
+      <div class="top-row">
+        <div class="back-btn" onclick="scrollTo('#screen-8')">‹</div>
+      </div>
+      <div class="photo-placeholder photo-lg">Photo</div>
+      <div style="text-align: center;">
+        <div class="text-heading" style="font-size: 16px;">Иванов Иван Иванович</div>
+        <div class="text-body" style="margin-top: 4px; font-size: 13px;">Терапевт</div>
+      </div>
+      <div class="divider"></div>
+      <div class="card" style="gap: 6px;">
+        <div class="text-body"><strong>Филиал:</strong> Клиника на Ленина, 10</div>
+        <div class="text-body"><strong>Стаж:</strong> 15 лет</div>
+        <div class="text-body"><strong>Образование:</strong> МГМУ им. Сеченова</div>
+      </div>
+      <div class="btn-primary" onclick="scrollTo('#screen-11')">Записаться к врачу</div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="scrollTo('#screen-0')"><span class="nav-icon">🏠</span>Главная</div>
+      <div class="nav-item" onclick="scrollTo('#screen-11')"><span class="nav-icon">📅</span>Записаться</div>
+      <div class="nav-item active"><span class="nav-icon">👨‍⚕️</span>Врачи</div>
+      <div class="nav-item" onclick="scrollTo('#screen-4')"><span class="nav-icon">📋</span>Мои записи</div>
+    </div>
+  </div>
+</div>
+
+<div class="flow-arrow" style="margin-left: 40px;">⤴</div>
+
+<!-- SCREEN 10: Search / Filter -->
+<div class="phone-wrapper">
+  <span class="screen-label" style="color: #2196F3;">10 · Поиск врача ✦ новый</span>
+  <div class="phone" id="screen-10" style="border-color: #bbdefb;">
+    <div class="status-bar">9:41</div>
+    <div class="content" style="gap: 14px;">
+      <div class="top-row">
+        <div class="back-btn" onclick="scrollTo('#screen-8')">‹</div>
+        <div class="screen-title-left">Найти врача</div>
+      </div>
+      <div class="input-label">ФИО врача</div>
+      <div class="input-field">XXX-XXX-XXX-XXX</div>
+      <div class="input-label">Специальность</div>
+      <div class="dropdown">Например</div>
+      <div class="input-label">Филиал</div>
+      <div class="dropdown">Все филиалы</div>
+      <div style="height: 16px;"></div>
+      <div class="btn-primary" onclick="scrollTo('#screen-8')">Найти</div>
+      <div class="btn-secondary" onclick="scrollTo('#screen-8')">Сбросить фильтры</div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="scrollTo('#screen-0')"><span class="nav-icon">🏠</span>Главная</div>
+      <div class="nav-item" onclick="scrollTo('#screen-11')"><span class="nav-icon">📅</span>Записаться</div>
+      <div class="nav-item active"><span class="nav-icon">👨‍⚕️</span>Врачи</div>
+      <div class="nav-item" onclick="scrollTo('#screen-4')"><span class="nav-icon">📋</span>Мои записи</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- ===================== FLOW 4: ЗАПИСАТЬСЯ ===================== -->
+<div class="section-divider">
+  <h2>Поток 4: Запись на приём</h2>
+  <p>Главная / Карточка врача → Ввод данных → Статус записи</p>
+</div>
+
+<div class="storyboard">
+
+<!-- SCREEN 11: Appointment form -->
+<div class="phone-wrapper">
+  <span class="screen-label" style="color: #FF9800;">11 · Ввод данных о приёме ✦ дополнить</span>
+  <div class="phone" id="screen-11" style="border-color: #ffe0b2;">
+    <div class="status-bar">9:41</div>
+    <div class="content" style="gap: 12px;">
+      <div class="screen-title">Записаться на приём</div>
+      <div class="input-label">Врач</div>
+      <div class="dropdown">Иванов И.И.</div>
+      <div class="input-label">Специальность</div>
+      <div class="dropdown">Терапевт</div>
+      <div class="input-label">Филиал</div>
+      <div class="dropdown">Клиника на Ленина, 10</div>
+      <div class="input-label">Дата приёма</div>
+      <div class="dropdown">ДД.ММ.ГГГГ</div>
+      <div class="input-label">Время</div>
+      <div class="dropdown">Выберите время</div>
+      <div class="input-label">Телефон для связи</div>
+      <div class="input-field">+7 (xxx) xxx xx xx</div>
+      <div style="height: 4px;"></div>
+      <div class="btn-primary" onclick="scrollTo('#screen-12')">Записаться</div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="scrollTo('#screen-0')"><span class="nav-icon">🏠</span>Главная</div>
+      <div class="nav-item active"><span class="nav-icon">📅</span>Записаться</div>
+      <div class="nav-item" onclick="scrollTo('#screen-8')"><span class="nav-icon">👨‍⚕️</span>Врачи</div>
+      <div class="nav-item" onclick="scrollTo('#screen-4')"><span class="nav-icon">📋</span>Мои записи</div>
+    </div>
+  </div>
+</div>
+
+<div class="flow-arrow">→</div>
+
+<!-- SCREEN 12: Appointment status -->
+<div class="phone-wrapper">
+  <span class="screen-label" style="color: #2196F3;">12 · Статус записи ✦ новый</span>
+  <div class="phone" id="screen-12" style="border-color: #bbdefb;">
+    <div class="status-bar">9:41</div>
+    <div class="content" style="gap: 14px; justify-content: center;">
+      <div class="success-icon">✓</div>
+      <div class="screen-title">Запись оформлена!</div>
+      <div class="text-body" style="text-align: center;">
+        <span class="badge badge-confirmed">Подтверждена</span>
+      </div>
+      <div class="card" style="gap: 6px;">
+        <div class="text-heading">Иванов И.И.</div>
+        <div class="text-body">Терапевт</div>
+        <div class="divider"></div>
+        <div class="text-body">📅 15.03.2026, 10:00</div>
+        <div class="text-body">📍 Клиника на Ленина, 10</div>
+      </div>
+      <div class="btn-primary" onclick="scrollTo('#screen-0')">На главную</div>
+      <div class="btn-secondary" onclick="scrollTo('#screen-4')">Мои записи</div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="scrollTo('#screen-0')"><span class="nav-icon">🏠</span>Главная</div>
+      <div class="nav-item active"><span class="nav-icon">📅</span>Записаться</div>
+      <div class="nav-item" onclick="scrollTo('#screen-8')"><span class="nav-icon">👨‍⚕️</span>Врачи</div>
+      <div class="nav-item" onclick="scrollTo('#screen-4')"><span class="nav-icon">📋</span>Мои записи</div>
+    </div>
+  </div>
+</div>
+
+<div class="flow-arrow" style="color: #e53935;">⤳</div>
+
+<!-- SCREEN 12a: Appointment Error -->
+<div class="phone-wrapper">
+  <span class="screen-label" style="color: #e53935;">12а · Ошибка записи ✦ ошибка</span>
+  <div class="phone" id="screen-12a" style="border-color: #ffcdd2;">
+    <div class="status-bar">9:41</div>
+    <div class="content" style="gap: 14px; justify-content: center;">
+      <div class="error-icon">✕</div>
+      <div class="screen-title">Не удалось создать запись</div>
+      <div class="text-body" style="text-align: center;">
+        <span class="badge badge-error">Ошибка</span>
+      </div>
+      <div class="card" style="gap: 8px; border-color: #ffcdd2; background: #fffafa;">
+        <div class="error-text" style="text-align: left; font-size: 12px;">
+          Выбранное время уже занято или произошла ошибка сервера. Пожалуйста, попробуйте выбрать другое время.
+        </div>
+      </div>
+      <div class="btn-primary" onclick="scrollTo('#screen-11')">Попробовать снова</div>
+      <div class="btn-secondary" onclick="scrollTo('#screen-0')">На главную</div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="scrollTo('#screen-0')"><span class="nav-icon">🏠</span>Главная</div>
+      <div class="nav-item active"><span class="nav-icon">📅</span>Записаться</div>
+      <div class="nav-item" onclick="scrollTo('#screen-8')"><span class="nav-icon">👨‍⚕️</span>Врачи</div>
+      <div class="nav-item" onclick="scrollTo('#screen-4')"><span class="nav-icon">📋</span>Мои записи</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div style="height: 40px;"></div>
+
+<script>
+  function scrollTo(selector) {
+    const el = document.querySelector(selector);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.style.boxShadow = '0 0 0 3px #4CAF50, 0 8px 32px rgba(0,0,0,0.18)';
+      setTimeout(() => {
+        el.style.boxShadow = '';
+      }, 1200);
+    }
+  }
+</script>
+
+</body>
+</html>

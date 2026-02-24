@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UML State Machine: Состояния записи на приём (полная версия)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+        .version-badge {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .version-badge span {
+            background: #fff;
+            color: #27ae60;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .diagram-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .state-diagram-svg {
+            width: 100%;
+            max-width: 1100px;
+            height: 650px;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .state {
+            fill: white;
+            stroke: #3498db;
+            stroke-width: 3;
+        }
+        .state-created { stroke: #3498db; }
+        .state-waiting { stroke: #f39c12; }
+        .state-confirmed { stroke: #27ae60; }
+        .state-cancelled { stroke: #e74c3c; fill: #fdf2f2; }
+        .state-in-progress { stroke: #9b59b6; }
+        .state-completed { stroke: #27ae60; fill: #f0fff4; }
+        
+        .state-label {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            fill: #2c3e50;
+            text-anchor: middle;
+        }
+        .state-number {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 11px;
+            font-weight: bold;
+            fill: white;
+        }
+        
+        .initial-state {
+            fill: #2c3e50;
+        }
+        .final-state-outer {
+            fill: none;
+            stroke: #2c3e50;
+            stroke-width: 2;
+        }
+        .final-state-inner {
+            fill: #2c3e50;
+        }
+        
+        .transition {
+            fill: none;
+            stroke: #666;
+            stroke-width: 2;
+            marker-end: url(#arrowhead);
+        }
+        .transition-cancel {
+            stroke: #e74c3c;
+        }
+        .transition-success {
+            stroke: #27ae60;
+        }
+        
+        .transition-label {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 10px;
+            fill: #333;
+        }
+        .transition-label-bg {
+            fill: #fff9c4;
+            stroke: #f9a825;
+            stroke-width: 1;
+        }
+        .transition-label-cancel {
+            fill: #ffebee;
+            stroke: #ef5350;
+        }
+        .transition-label-success {
+            fill: #e8f5e9;
+            stroke: #66bb6a;
+        }
+        
+        .legend {
+            margin-top: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .legend h3 {
+            margin-bottom: 12px;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+        
+        .transition-table {
+            margin-top: 25px;
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        .transition-table th, .transition-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .transition-table th {
+            background: #3498db;
+            color: white;
+        }
+        .transition-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .transition-table tr:hover {
+            background: #e3f2fd;
+        }
+        .transition-table tr.cancel-row {
+            background: #ffebee;
+        }
+        .transition-table tr.cancel-row:hover {
+            background: #ffcdd2;
+        }
+        .transition-table tr.new-row {
+            background: #fff3e0;
+        }
+        .new-badge {
+            background: #ff9800;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            margin-left: 5px;
+        }
+        
+        .scenarios-box {
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+            border: 2px solid #2196f3;
+            border-radius: 10px;
+        }
+        .scenarios-box h3 {
+            color: #1565c0;
+            margin-bottom: 15px;
+        }
+        .scenario {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+        .scenario-title {
+            font-weight: bold;
+            color: #1565c0;
+            margin-bottom: 5px;
+        }
+        .scenario-path {
+            font-family: monospace;
+            font-size: 12px;
+            color: #666;
+        }
+        .scenario-path .state {
+            background: #e3f2fd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin: 0 2px;
+        }
+        .scenario-path .arrow {
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 UML State Machine Diagram</h1>
+        <p class="subtitle">Состояния записи на приём к врачу (полная версия)</p>
+        <div class="version-badge">
+            <span>✅ Версия 2.0 — Все сценарии отмены</span>
+        </div>
+        
+        <div class="diagram-container">
+            <svg class="state-diagram-svg" viewBox="0 0 1100 620">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+                    </marker>
+                    <marker id="arrowhead-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#e74c3c"/>
+                    </marker>
+                    <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#27ae60"/>
+                    </marker>
+                </defs>
+                
+                <!-- Initial State -->
+                <circle class="initial-state" cx="550" cy="30" r="12"/>
+                
+                <!-- Transition: Initial → Создан -->
+                <path class="transition" d="M 550,42 L 550,75" style="marker-end: url(#arrowhead);"/>
+                <rect class="transition-label-bg" x="470" y="45" width="160" height="25" rx="4"/>
+                <text class="transition-label" x="550" y="62" text-anchor="middle">пациент записан / создать запись</text>
+                
+                <!-- State 1: Создан -->
+                <rect class="state state-created" x="450" y="80" width="200" height="60" rx="30"/>
+                <circle cx="465" cy="95" r="12" fill="#3498db"/>
+                <text class="state-number" x="465" y="99" text-anchor="middle">1</text>
+                <text class="state-label" x="560" y="117">📝 Создан</text>
+                
+                <!-- Transition: Создан → Ожидает подтверждения -->
+                <path class="transition" d="M 550,140 L 550,185" style="marker-end: url(#arrowhead);"/>
+                <rect class="transition-label-bg" x="440" y="150" width="220" height="30" rx="4"/>
+                <text class="transition-label" x="550" y="163" text-anchor="middle">за 1 день до приёма /</text>
+                <text class="transition-label" x="550" y="175" text-anchor="middle">отправить уведомление</text>
+                
+                <!-- NEW: Transition: Создан → Отменён (ранняя отмена) -->
+                <path class="transition transition-cancel" d="M 450,110 L 300,110 L 300,400 L 380,400" style="marker-end: url(#arrowhead-red);"/>
+                <rect class="transition-label-cancel" x="200" y="200" width="130" height="35" rx="4"/>
+                <text class="transition-label" x="265" y="215" text-anchor="middle" fill="#c62828">пациент отменил</text>
+                <text class="transition-label" x="265" y="228" text-anchor="middle" fill="#c62828">до уведомления</text>
+                <text x="180" y="215" font-size="10" fill="#ff9800" font-weight="bold">NEW</text>
+                
+                <!-- State 2: Ожидает подтверждения -->
+                <rect class="state state-waiting" x="400" y="190" width="300" height="60" rx="30"/>
+                <circle cx="420" cy="205" r="12" fill="#f39c12"/>
+                <text class="state-number" x="420" y="209" text-anchor="middle">2</text>
+                <text class="state-label" x="560" y="227">⏳ Ожидает подтверждения</text>
+                
+                <!-- Transition: Ожидает → Подтверждён -->
+                <path class="transition transition-success" d="M 480,250 L 480,290 L 350,290 L 350,330" style="marker-end: url(#arrowhead-green);"/>
+                <rect class="transition-label-success" x="380" y="270" width="140" height="25" rx="4"/>
+                <text class="transition-label" x="450" y="287" text-anchor="middle" fill="#2e7d32">[подтвердил] ✓</text>
+                
+                <!-- Transition: Ожидает → Отменён -->
+                <path class="transition transition-cancel" d="M 620,250 L 620,290 L 750,290 L 750,380" style="marker-end: url(#arrowhead-red);"/>
+                <rect class="transition-label-cancel" x="665" y="265" width="120" height="25" rx="4"/>
+                <text class="transition-label" x="725" y="282" text-anchor="middle" fill="#c62828">[отменил] ✗</text>
+                
+                <!-- State 3: Подтверждён -->
+                <rect class="state state-confirmed" x="250" y="335" width="200" height="60" rx="30"/>
+                <circle cx="270" cy="350" r="12" fill="#27ae60"/>
+                <text class="state-number" x="270" y="354" text-anchor="middle">3</text>
+                <text class="state-label" x="360" y="372">✅ Подтверждён</text>
+                
+                <!-- Transition: Подтверждён → В работе -->
+                <path class="transition transition-success" d="M 350,395 L 350,445" style="marker-end: url(#arrowhead-green);"/>
+                <rect class="transition-label-success" x="260" y="405" width="180" height="30" rx="4"/>
+                <text class="transition-label" x="350" y="418" text-anchor="middle" fill="#2e7d32">пациент пришёл /</text>
+                <text class="transition-label" x="350" y="430" text-anchor="middle" fill="#2e7d32">врач начал приём</text>
+                
+                <!-- NEW: Transition: Подтверждён → Отменён (не явился) -->
+                <path class="transition transition-cancel" d="M 450,365 L 650,365 L 650,400" style="marker-end: url(#arrowhead-red);"/>
+                <rect class="transition-label-cancel" x="485" y="340" width="130" height="35" rx="4"/>
+                <text class="transition-label" x="550" y="355" text-anchor="middle" fill="#c62828">пациент не явился</text>
+                <text class="transition-label" x="550" y="368" text-anchor="middle" fill="#c62828">(неявка)</text>
+                <text x="620" y="355" font-size="10" fill="#ff9800" font-weight="bold">NEW</text>
+                
+                <!-- State 4: Отменён -->
+                <rect class="state state-cancelled" x="550" y="380" width="200" height="60" rx="30"/>
+                <circle cx="570" cy="395" r="12" fill="#e74c3c"/>
+                <text class="state-number" x="570" y="399" text-anchor="middle">4</text>
+                <text class="state-label" x="660" y="417">❌ Отменён</text>
+                
+                <!-- Final State from Отменён -->
+                <path class="transition" d="M 750,410 L 820,410" style="marker-end: url(#arrowhead);"/>
+                <circle class="final-state-outer" cx="845" cy="410" r="15"/>
+                <circle class="final-state-inner" cx="845" cy="410" r="9"/>
+                
+                <!-- State 5: В работе -->
+                <rect class="state state-in-progress" x="250" y="450" width="200" height="60" rx="30"/>
+                <circle cx="270" cy="465" r="12" fill="#9b59b6"/>
+                <text class="state-number" x="270" y="469" text-anchor="middle">5</text>
+                <text class="state-label" x="360" y="487">🔄 В работе</text>
+                
+                <!-- Transition: В работе → Завершён -->
+                <path class="transition transition-success" d="M 350,510 L 350,555" style="marker-end: url(#arrowhead-green);"/>
+                <rect class="transition-label-success" x="250" y="515" width="200" height="30" rx="4"/>
+                <text class="transition-label" x="350" y="528" text-anchor="middle" fill="#2e7d32">врач закрыл запись /</text>
+                <text class="transition-label" x="350" y="540" text-anchor="middle" fill="#2e7d32">оформлен протокол</text>
+                
+                <!-- State 6: Завершён -->
+                <rect class="state state-completed" x="250" y="560" width="200" height="60" rx="30"/>
+                <circle cx="270" cy="575" r="12" fill="#27ae60"/>
+                <text class="state-number" x="270" y="579" text-anchor="middle">6</text>
+                <text class="state-label" x="360" y="597">✔️ Завершён</text>
+                
+                <!-- Final State from Завершён -->
+                <path class="transition" d="M 450,590 L 520,590" style="marker-end: url(#arrowhead);"/>
+                <circle class="final-state-outer" cx="545" cy="590" r="15"/>
+                <circle class="final-state-inner" cx="545" cy="590" r="9"/>
+                
+                <!-- Labels for states count -->
+                <text x="950" y="30" font-size="12" fill="#666" font-family="Segoe UI">6 состояний</text>
+                <text x="950" y="50" font-size="12" fill="#666" font-family="Segoe UI">8 переходов</text>
+                <text x="950" y="70" font-size="12" fill="#e74c3c" font-family="Segoe UI" font-weight="bold">3 пути к отмене</text>
+            </svg>
+            
+            <!-- Легенда -->
+            <div class="legend">
+                <h3>📖 Легенда UML State Machine</h3>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <svg width="20" height="20"><circle cx="10" cy="10" r="8" fill="#2c3e50"/></svg>
+                        <span>Начальное псевдосостояние</span>
+                    </div>
+                    <div class="legend-item">
+                        <svg width="24" height="24"><circle cx="12" cy="12" r="10" fill="none" stroke="#2c3e50" stroke-width="2"/><circle cx="12" cy="12" r="6" fill="#2c3e50"/></svg>
+                        <span>Конечное состояние</span>
+                    </div>
+                    <div class="legend-item">
+                        <svg width="80" height="30"><rect x="2" y="2" width="76" height="26" rx="13" fill="white" stroke="#3498db" stroke-width="2"/></svg>
+                        <span>Состояние</span>
+                    </div>
+                    <div class="legend-item">
+                        <svg width="50" height="20"><line x1="0" y1="10" x2="40" y2="10" stroke="#27ae60" stroke-width="2"/><polygon points="40,6 50,10 40,14" fill="#27ae60"/></svg>
+                        <span>Успешный переход</span>
+                    </div>
+                    <div class="legend-item">
+                        <svg width="50" height="20"><line x1="0" y1="10" x2="40" y2="10" stroke="#e74c3c" stroke-width="2"/><polygon points="40,6 50,10 40,14" fill="#e74c3c"/></svg>
+                        <span>Переход к отмене</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Таблица переходов -->
+            <h3 style="margin-top: 25px; color: #2c3e50;">📋 Полная таблица переходов</h3>
+            <table class="transition-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Из состояния</th>
+                        <th>Событие</th>
+                        <th>Guard [условие]</th>
+                        <th>Действие</th>
+                        <th>В состояние</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>● (Initial)</td>
+                        <td>пациент записан</td>
+                        <td>—</td>
+                        <td>создать запись</td>
+                        <td>Создан</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Создан</td>
+                        <td>таймер сработал</td>
+                        <td>[за 1 день до приёма]</td>
+                        <td>отправить уведомление</td>
+                        <td>Ожидает подтверждения</td>
+                    </tr>
+                    <tr class="new-row">
+                        <td>3 <span class="new-badge">NEW</span></td>
+                        <td>Создан</td>
+                        <td>пациент отменил</td>
+                        <td>[до уведомления]</td>
+                        <td>удалить запись</td>
+                        <td>Отменён</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Ожидает подтверждения</td>
+                        <td>пациент ответил</td>
+                        <td>[подтвердил]</td>
+                        <td>обновить статус</td>
+                        <td>Подтверждён</td>
+                    </tr>
+                    <tr class="cancel-row">
+                        <td>5</td>
+                        <td>Ожидает подтверждения</td>
+                        <td>пациент ответил</td>
+                        <td>[отменил]</td>
+                        <td>удалить запись</td>
+                        <td>Отменён</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Подтверждён</td>
+                        <td>пациент пришёл</td>
+                        <td>—</td>
+                        <td>начать приём</td>
+                        <td>В работе</td>
+                    </tr>
+                    <tr class="new-row">
+                        <td>7 <span class="new-badge">NEW</span></td>
+                        <td>Подтверждён</td>
+                        <td>время приёма прошло</td>
+                        <td>[пациент не явился]</td>
+                        <td>отметить неявку</td>
+                        <td>Отменён</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>В работе</td>
+                        <td>врач закончил</td>
+                        <td>—</td>
+                        <td>оформить протокол</td>
+                        <td>Завершён</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <!-- Сценарии -->
+            <div class="scenarios-box">
+                <h3>🎯 Все возможные сценарии (пути)</h3>
+                
+                <div class="scenario">
+                    <div class="scenario-title">✅ Успешный путь (Happy Path)</div>
+                    <div class="scenario-path">
+                        <span class="state">Создан</span>
+                        <span class="arrow">→</span>
+                        <span class="state">Ожидает подтверждения</span>
+                        <span class="arrow">→</span>
+                        <span class="state">Подтверждён</span>
+                        <span class="arrow">→</span>
+                        <span class="state">В работе</span>
+                        <span class="arrow">→</span>
+                        <span class="state">Завершён</span>
+                        <span class="arrow">→</span>
+                        ◉
+                    </div>
+                </div>
+                
+                <div class="scenario">
+                    <div class="scenario-title">❌ Отмена #1: Пациент отменил до уведомления</div>
+                    <div class="scenario-path">
+                        <span class="state">Создан</span>
+                        <span class="arrow">→</span>
+                        <span class="state" style="background: #ffebee;">Отменён</span>
+                        <span class="arrow">→</span>
+                        ◉
+                    </div>
+                </div>
+                
+                <div class="scenario">
+                    <div class="scenario-title">❌ Отмена #2: Пациент не подтвердил запись</div>
+                    <div class="scenario-path">
+                        <span class="state">Создан</span>
+                        <span class="arrow">→</span>
+                        <span class="state">Ожидает подтверждения</span>
+                        <span class="arrow">→</span>
+                        <span class="state" style="background: #ffebee;">Отменён</span>
+                        <span class="arrow">→</span>
+                        ◉
+                    </div>
+                </div>
+                
+                <div class="scenario">
+                    <div class="scenario-title">❌ Отмена #3: Пациент подтвердил, но не явился</div>
+                    <div class="scenario-path">
+                        <span class="state">Создан</span>
+                        <span class="arrow">→</span>
+                        <span class="state">Ожидает подтверждения</span>
+                        <span class="arrow">→</span>
+                        <span class="state">Подтверждён</span>
+                        <span class="arrow">→</span>
+                        <span class="state" style="background: #ffebee;">Отменён</span>
+                        <span class="arrow">→</span>
+                        ◉
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

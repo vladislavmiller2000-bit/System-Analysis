@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>1НФ - Crow's Foot с кардинальностью</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .diagram-container {
+            background: white;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            overflow: auto;
+        }
+        svg {
+            display: block;
+            margin: 0 auto;
+        }
+        .table-header {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .pk {
+            font-weight: bold;
+        }
+        .fk {
+            font-style: italic;
+        }
+        .attr {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>📊 Логическая ER-модель в 1НФ</h1>
+    <p class="subtitle">Нотация Crow's Foot с кардинальностью</p>
+    
+    <div class="diagram-container">
+        <svg width="1200" height="750" viewBox="0 0 1200 750">
+            
+            <!-- ==================== ТАБЛИЦА ЗАКАЗ ==================== -->
+            <rect x="50" y="50" width="280" height="520" fill="white" stroke="#2196f3" stroke-width="3" rx="5"/>
+            <!-- Заголовок -->
+            <rect x="50" y="50" width="280" height="35" fill="#2196f3" rx="5"/>
+            <text x="190" y="74" text-anchor="middle" fill="white" class="table-header">Заказ</text>
+            <!-- Атрибуты -->
+            <line x1="50" y1="85" x2="330" y2="85" stroke="#2196f3" stroke-width="1"/>
+            <text x="60" y="105" class="pk">*№ заказа</text>
+            <text x="60" y="125" class="attr">Дата заказа</text>
+            <text x="60" y="145" class="attr">Время заказа</text>
+            <text x="60" y="165" class="attr">Статус заказа</text>
+            <text x="60" y="185" class="attr">Сумма заказа</text>
+            <text x="60" y="205" class="attr">Сумма скидок</text>
+            <!-- Разделитель - Пользователь -->
+            <line x1="60" y1="215" x2="320" y2="215" stroke="#ddd" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="60" y="235" class="attr">Логин</text>
+            <text x="60" y="255" class="attr">Пароль</text>
+            <text x="60" y="275" class="attr">Фамилия</text>
+            <text x="60" y="295" class="attr">Имя</text>
+            <text x="60" y="315" class="attr">Отчество</text>
+            <text x="60" y="335" class="attr">E-mail</text>
+            <text x="60" y="355" class="attr">Телефон</text>
+            <!-- Разделитель - Доставка -->
+            <line x1="60" y1="365" x2="320" y2="365" stroke="#ddd" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="60" y="385" class="attr">Индекс</text>
+            <text x="60" y="405" class="attr">Город</text>
+            <text x="60" y="425" class="attr">Адрес</text>
+            <text x="60" y="445" class="attr">Дата доставки</text>
+            <!-- Разделитель - Оплата -->
+            <line x1="60" y1="455" x2="320" y2="455" stroke="#ddd" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="60" y="475" class="attr">Номер чека</text>
+            <text x="60" y="495" class="attr">Способ оплаты</text>
+            <text x="60" y="515" class="attr">Статус оплаты</text>
+            
+            <!-- ==================== ТАБЛИЦА ТОВАР В ЗАКАЗЕ ==================== -->
+            <rect x="450" y="200" width="200" height="120" fill="white" stroke="#ff9800" stroke-width="3" rx="5"/>
+            <!-- Заголовок -->
+            <rect x="450" y="200" width="200" height="35" fill="#ff9800" rx="5"/>
+            <text x="550" y="224" text-anchor="middle" fill="white" class="table-header">Товар в заказе</text>
+            <!-- Атрибуты -->
+            <line x1="450" y1="235" x2="650" y2="235" stroke="#ff9800" stroke-width="1"/>
+            <text x="460" y="255" class="pk fk">*№ заказа (FK)</text>
+            <text x="460" y="275" class="pk fk">*Артикул (FK)</text>
+            <text x="460" y="295" class="attr">Количество</text>
+            
+            <!-- ==================== ТАБЛИЦА ТОВАР ==================== -->
+            <rect x="750" y="150" width="200" height="160" fill="white" stroke="#4caf50" stroke-width="3" rx="5"/>
+            <!-- Заголовок -->
+            <rect x="750" y="150" width="200" height="35" fill="#4caf50" rx="5"/>
+            <text x="850" y="174" text-anchor="middle" fill="white" class="table-header">Товар</text>
+            <!-- Атрибуты -->
+            <line x1="750" y1="185" x2="950" y2="185" stroke="#4caf50" stroke-width="1"/>
+            <text x="760" y="205" class="pk">*Артикул</text>
+            <text x="760" y="225" class="attr">Название</text>
+            <text x="760" y="245" class="attr">Описание</text>
+            <text x="760" y="265" class="attr">Цена</text>
+            <text x="760" y="285" class="fk">Название акции (FK)</text>
+            
+            <!-- ==================== ТАБЛИЦА АКЦИЯ ==================== -->
+            <rect x="1000" y="180" width="180" height="100" fill="white" stroke="#9c27b0" stroke-width="3" rx="5"/>
+            <!-- Заголовок -->
+            <rect x="1000" y="180" width="180" height="35" fill="#9c27b0" rx="5"/>
+            <text x="1090" y="204" text-anchor="middle" fill="white" class="table-header">Акция</text>
+            <!-- Атрибуты -->
+            <line x1="1000" y1="215" x2="1180" y2="215" stroke="#9c27b0" stroke-width="1"/>
+            <text x="1010" y="235" class="pk">*Название акции</text>
+            <text x="1010" y="255" class="attr">Размер скидки</text>
+            
+            <!-- ==================== СВЯЗИ С КАРДИНАЛЬНОСТЬЮ ==================== -->
+            
+            <!-- Связь: Заказ (1) --- (N) Товар в заказе -->
+            <line x1="330" y1="260" x2="450" y2="260" stroke="#333" stroke-width="2"/>
+            <!-- Кардинальность "1" у Заказа -->
+            <line x1="340" y1="255" x2="340" y2="265" stroke="#333" stroke-width="2"/>
+            <text x="355" y="250" font-size="12" fill="#333">1</text>
+            <!-- Кардинальность "N" (crow's foot) у Товар в заказе -->
+            <line x1="440" y1="250" x2="450" y2="260" stroke="#333" stroke-width="2"/>
+            <line x1="440" y1="270" x2="450" y2="260" stroke="#333" stroke-width="2"/>
+            <line x1="440" y1="260" x2="450" y2="260" stroke="#333" stroke-width="2"/>
+            <text x="415" y="250" font-size="12" fill="#333">N</text>
+            
+            <!-- Связь: Товар в заказе (N) --- (1) Товар -->
+            <line x1="650" y1="260" x2="750" y2="230" stroke="#333" stroke-width="2"/>
+            <!-- Кардинальность "N" (crow's foot) у Товар в заказе -->
+            <line x1="660" y1="250" x2="650" y2="260" stroke="#333" stroke-width="2"/>
+            <line x1="660" y1="270" x2="650" y2="260" stroke="#333" stroke-width="2"/>
+            <line x1="660" y1="260" x2="650" y2="260" stroke="#333" stroke-width="2"/>
+            <text x="665" y="250" font-size="12" fill="#333">N</text>
+            <!-- Кардинальность "1" у Товар -->
+            <line x1="740" y1="225" x2="740" y2="235" stroke="#333" stroke-width="2"/>
+            <text x="720" y="220" font-size="12" fill="#333">1</text>
+            
+            <!-- Связь: Товар (N) --- (0..1) Акция -->
+            <line x1="950" y1="230" x2="1000" y2="230" stroke="#333" stroke-width="2"/>
+            <!-- Кардинальность "N" (crow's foot) у Товар -->
+            <line x1="960" y1="220" x2="950" y2="230" stroke="#333" stroke-width="2"/>
+            <line x1="960" y1="240" x2="950" y2="230" stroke="#333" stroke-width="2"/>
+            <line x1="960" y1="230" x2="950" y2="230" stroke="#333" stroke-width="2"/>
+            <text x="955" y="215" font-size="12" fill="#333">N</text>
+            <!-- Кардинальность "0..1" у Акция (кружок = 0, линия = 1) -->
+            <circle cx="990" cy="230" r="5" fill="white" stroke="#333" stroke-width="2"/>
+            <line x1="995" y1="225" x2="995" y2="235" stroke="#333" stroke-width="2"/>
+            <text x="975" y="215" font-size="10" fill="#333">0..1</text>
+            
+            <!-- ==================== ЛЕГЕНДА ==================== -->
+            <rect x="50" y="600" width="1130" height="130" fill="#f9f9f9" stroke="#ddd" stroke-width="2" rx="10"/>
+            <text x="615" y="625" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">📋 ЛЕГЕНДА (Crow's Foot)</text>
+            
+            <!-- Один -->
+            <line x1="80" y1="660" x2="130" y2="660" stroke="#333" stroke-width="2"/>
+            <line x1="125" y1="650" x2="125" y2="670" stroke="#333" stroke-width="2"/>
+            <text x="145" y="665" font-size="12" fill="#333">— Один (1)</text>
+            
+            <!-- Много -->
+            <line x1="280" y1="660" x2="330" y2="660" stroke="#333" stroke-width="2"/>
+            <line x1="320" y1="650" x2="330" y2="660" stroke="#333" stroke-width="2"/>
+            <line x1="320" y1="670" x2="330" y2="660" stroke="#333" stroke-width="2"/>
+            <text x="345" y="665" font-size="12" fill="#333">— Много (N) "воронья лапка"</text>
+            
+            <!-- Обязательный -->
+            <line x1="550" y1="660" x2="600" y2="660" stroke="#333" stroke-width="2"/>
+            <line x1="595" y1="650" x2="595" y2="670" stroke="#333" stroke-width="2"/>
+            <text x="615" y="665" font-size="12" fill="#333">— Обязательный (минимум 1)</text>
+            
+            <!-- Необязательный -->
+            <line x1="820" y1="660" x2="870" y2="660" stroke="#333" stroke-width="2"/>
+            <circle cx="865" cy="660" r="5" fill="white" stroke="#333" stroke-width="2"/>
+            <text x="885" y="665" font-size="12" fill="#333">— Необязательный (минимум 0)</text>
+            
+            <!-- PK / FK -->
+            <text x="80" y="710" font-size="12" fill="#333"><tspan font-weight="bold">*Атрибут</tspan> — Первичный ключ (PK)</text>
+            <text x="350" y="710" font-size="12" fill="#333"><tspan font-style="italic">Атрибут (FK)</tspan> — Внешний ключ</text>
+            
+            <!-- ==================== ОПИСАНИЯ СВЯЗЕЙ ==================== -->
+            <rect x="50" y="420" width="300" height="150" fill="#e3f2fd" stroke="#2196f3" stroke-width="1" rx="5" opacity="0"/>
+            
+            <!-- Подписи связей -->
+            <text x="380" y="290" font-size="11" fill="#666" font-style="italic">Заказ содержит</text>
+            <text x="380" y="305" font-size="11" fill="#666" font-style="italic">товары</text>
+            
+            <text x="680" y="215" font-size="11" fill="#666" font-style="italic">Товар в заказах</text>
+            
+            <text x="950" y="260" font-size="11" fill="#666" font-style="italic">Участвует в</text>
+            <text x="950" y="275" font-size="11" fill="#666" font-style="italic">акции</text>
+            
+        </svg>
+    </div>
+    
+    <!-- План нормализации -->
+    <div style="background: #fff3e0; padding: 20px; border-radius: 10px; margin-top: 20px; border: 2px solid #ff9800;">
+        <h3 style="color: #e65100; margin-top: 0;">📝 План нормализации для 1НФ:</h3>
+        <ol style="color: #333; line-height: 1.8;">
+            <li>Разложили составной атрибут <strong>ФИО</strong> на: Фамилия, Имя, Отчество</li>
+            <li>Выделили сущность <strong>"Товар"</strong> — атрибуты товара вынесены из Заказа</li>
+            <li>Выделили сущность <strong>"Акция"</strong> — товар может участвовать в одной акции</li>
+            <li>Создали промежуточную сущность <strong>"Товар в заказе"</strong> — устранили связь многие-ко-многим между Заказом и Товаром</li>
+        </ol>
+        
+        <h4 style="color: #e65100;">Связи:</h4>
+        <ul style="color: #333;">
+            <li><strong>Заказ → Товар в заказе:</strong> 1:N (один заказ содержит много позиций)</li>
+            <li><strong>Товар → Товар в заказе:</strong> 1:N (один товар может быть во многих заказах)</li>
+            <li><strong>Акция → Товар:</strong> 1:N (одна акция распространяется на много товаров, товар может НЕ участвовать в акции)</li>
+        </ul>
+    </div>
+    
+</body>
+</html>
