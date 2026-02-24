@@ -1,8 +1,7 @@
 # Vladislav Orekhov — System & Business Analyst Portfolio
 
 > Junior System Analyst | BPMN · UML · ERD · SQL · Figma  
-> Moscow, Russia · vladislav.miller2000@gmail.com  
-> [LinkedIn](https://linkedin.com/in/vladislavorekhov)
+> Moscow, Russia · vladislav.miller2000@gmail.com
 
 Системный аналитик с практическим опытом полного цикла аналитической работы: от сбора требований и моделирования бизнес-процессов до проектирования баз данных и SQL-анализа. Проходу специализацию «Системный аналитик» в Яндекс Практикум (2026).
 
