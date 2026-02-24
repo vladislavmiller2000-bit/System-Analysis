@@ -38,20 +38,21 @@ Fluent in Russian and English, experienced working in international teams across
 
 ### Vita Clinic — Medical Clinic Business Process Analysis
 
-- Conducted AS-IS analysis of patient appointment workflow, identified 4 bottlenecks
-- Designed TO-BE model with automated scheduling — eliminated manual receptionist step
+- Conducted AS-IS analysis of patient appointment workflow, identified 4 bottlenecks (data duplication, manual routing, missing validation, receptionist dependency) and proposed solutions based on automation best practices
+- Designed TO-BE model with automated scheduling — reduced processing chain from 5 to 2 steps by eliminating manual receptionist stage and accelerating initial data processing
 - Created BPMN 2.0 diagrams (AS-IS and TO-BE) and UML State Machine for appointment lifecycle
-- Defined 17 functional requirements for the information system
+- Built interactive mobile app prototype (12 screens) in Figma, designed user journey from authorization to appointment confirmation
+- Defined 17 functional and 4 non-functional requirements, documented Use Case specification
 
 ### Nakarabine — E-Commerce Database Design
 
-- Designed logical data model: 5 tables with relationships and integrity constraints
+- Designed logical data model (PK, FK, UNIQUE, NOT NULL, CHECK constraints), defined relationship cardinalities and ensured referential integrity
 - Built ERD diagrams in Chen and Crow's Foot notations, performed normalization (1NF through 3NF)
-- Compiled comprehensive data dictionary with attribute descriptions, types, and constraints
+- Developed data dictionary and terminology glossary for team alignment: attribute descriptions, data types, business rules, allowed values
 
 ### Restaurant Sales Analysis — SQL Project
 
-- Designed relational schema with 3 tables (orders, menu items, order line items)
+- Designed relational schema (DDL: CREATE TABLE, PRIMARY KEY, FOREIGN KEY, constraints) and populated with test data (50 orders, 20 menu items)
 - Wrote 20+ analytical queries: revenue by period, profit margins, menu ABC analysis
 - Applied JOIN, CTEs, window functions (LAG, RANK, ROW_NUMBER), subqueries, CASE expressions
 
@@ -59,34 +60,34 @@ Fluent in Russian and English, experienced working in international teams across
 
 ## WORK EXPERIENCE
 
+### KFC Cinema City — Rishon LeTsiyon, Israel
+**Deputy Director** | April 2024 – April 2025
+
+- Built daily analytics system for the restaurant (900+ receipts/day): tracked revenue, average check, hourly load, output — identified lunch-peak underperformance, reallocated resources, contributing to 10% profit increase
+- Implemented data-driven inventory management: analyzed consumption by category, adjusted procurement volumes — reduced supply costs by 15%
+- Coordinated a team of 20+ employees, standardized operational procedures and developed quality control checklists
+
+**Shift Manager** | November 2023 – April 2024
+
+- Managed shift operations (15 employees): SLA control for service speed, quality metrics monitoring, real-time incident resolution
+
 ### Intern — Burger King Corporation, Moscow
 **Marketing Research Department** | Summer 2022
 
-- Built sales analytics reports using Excel (pivot tables, formulas, ranking logic)
-- Automated receipt categorization and created restaurant revenue rankings — identified growth opportunities
-- Prepared KPI visualizations for management presentations
+- Built sales analytics dashboards for 50+ restaurants in Excel (pivot tables, INDEX/MATCH, conditional formatting)
+- Automated categorization of 10,000+ receipts and compiled restaurant revenue rankings — identified 5 growth opportunities for regional managers
+- Prepared KPI visualizations (conversion, average check, trends) for weekly management presentations
 
 **Business Analytics Department** | Summer 2019
 
-- Collected and structured data for financial and operational analysis
-- Prepared analytical materials and reports; gained experience in forecasting
+- Collected and structured financial data from multiple sources, prepared pivot tables for quarterly reports
+- Assisted in building sales forecast models based on historical data
 
 ### Intern — Knight Frank, Moscow
 **Residential Real Estate Marketing Department** | Spring 2022
 
-- Conducted residential real estate market analysis and competitor benchmarking
-- Participated in property valuation, prepared reports for the international office
-
-### KFC Cinema City — Rishon LeTsiyon, Israel
-**Deputy Director** | April 2024 – April 2025
-
-- Analyzed restaurant performance metrics (900+ daily receipts): revenue, capacity, production KPIs — identified bottlenecks, contributing to 10% quarterly profit increase
-- Optimized inventory management using data-driven approach, reducing supply costs by 15%
-- Coordinated a team of 20+ employees, established operational processes
-
-**Shift Manager** | November 2023 – April 2024
-
-- Managed operational processes and quality control during shifts
+- Conducted competitive analysis of 30+ premium residential properties: price per m², location, infrastructure — prepared comparative report for investment decision-making
+- Participated in property valuation using comparative approach, prepared analytical briefs for the international office
 
 ---
 
