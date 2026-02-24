@@ -1,7 +1,7 @@
 # VLADISLAV OREKHOV
 
 **Phone:** +7 (925) 472-90-54 | **Email:** vladislav.miller2000@gmail.com | **Moscow, Russia**  
-**GitHub:** github.com/vladislavmiller2000-bit
+**GitHub:** [github.com/vladislavmiller2000-bit](https://github.com/vladislavmiller2000-bit)
 
 ---
 
@@ -34,7 +34,7 @@ Fluent in Russian and English, experienced working in international teams across
 
 ## PROJECTS & PORTFOLIO
 
-**GitHub:** github.com/vladislavmiller2000-bit/System-Analysis
+**GitHub:** [github.com/vladislavmiller2000-bit/System-Analysis](https://github.com/vladislavmiller2000-bit/System-Analysis)
 
 ### Vita Clinic — Medical Clinic Business Process Analysis
 
