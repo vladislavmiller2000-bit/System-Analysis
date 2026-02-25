@@ -1,6 +1,6 @@
 -- =============================================================================
 -- RESTAURANT SALES ANALYSIS — SQL Portfolio Project
--- Author: Vladislav Orekhov
+-- Author: Vladislav Orekhov-Miller
 -- Date: February 2026
 -- Description: Analytical SQL queries on a restaurant sales dataset
 --              demonstrating SQL proficiency for a System/Business Analyst role

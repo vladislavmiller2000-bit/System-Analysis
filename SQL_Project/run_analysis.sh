@@ -14,7 +14,7 @@ SQL="restaurant_analysis.sql"
 
 echo "================================================="
 echo "  Restaurant Sales Analysis — SQL Project"
-echo "  Vladislav Orekhov"
+echo "  Vladislav Orekhov-Miller"
 echo "================================================="
 echo ""
 

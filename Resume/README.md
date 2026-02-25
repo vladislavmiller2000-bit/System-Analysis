@@ -1,4 +1,4 @@
-# Resume — Vladislav Orekhov
+# Resume — Vladislav Orekhov-Miller
 
 ## Files
 
@@ -6,5 +6,7 @@
 |------|-------------|
 | [resume_ru_new.md](resume_ru_new.md) | Резюме на русском (Markdown) |
 | [resume_en_new.md](resume_en_new.md) | Resume in English (Markdown) |
-| [Resume_Vladislav_Orekhov_RU.docx](Resume_Vladislav_Orekhov_RU.docx) | Резюме на русском (Word) |
-| [Resume_Vladislav_Orekhov_EN.docx](Resume_Vladislav_Orekhov_EN.docx) | Resume in English (Word) |
+| [Resume_Vladislav_Orekhov-Miller_RU.docx](Resume_Vladislav_Orekhov-Miller_RU.docx) | Резюме на русском (Word) |
+| [Resume_Vladislav_Orekhov-Miller_EN.docx](Resume_Vladislav_Orekhov-Miller_EN.docx) | Resume in English (Word) |
+| [cover_letter_ru.md](cover_letter_ru.md) | Сопроводительное письмо (Markdown) |
+| [Cover_Letter_Vladislav_Orekhov-Miller_RU.docx](Cover_Letter_Vladislav_Orekhov-Miller_RU.docx) | Сопроводительное письмо (Word) |

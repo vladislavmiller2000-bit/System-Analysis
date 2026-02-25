@@ -1,4 +1,4 @@
-# Vladislav Orekhov — System & Business Analyst Portfolio
+# Vladislav Orekhov-Miller — System & Business Analyst Portfolio
 
 > Junior System Analyst | BPMN · UML · ERD · SQL · Figma  
 > Moscow, Russia · vladislav.miller2000@gmail.com
@@ -71,10 +71,10 @@
 |--------|------|
 | Русский (Markdown) | [Resume/resume_ru_new.md](Resume/resume_ru_new.md) |
 | English (Markdown) | [Resume/resume_en_new.md](Resume/resume_en_new.md) |
-| Русский (Word) | [Resume/Resume_Vladislav_Orekhov_RU.docx](Resume/Resume_Vladislav_Orekhov_RU.docx) |
-| English (Word) | [Resume/Resume_Vladislav_Orekhov_EN.docx](Resume/Resume_Vladislav_Orekhov_EN.docx) |
+| Русский (Word) | [Resume/Resume_Vladislav_Orekhov-Miller_RU.docx](Resume/Resume_Vladislav_Orekhov-Miller_RU.docx) |
+| English (Word) | [Resume/Resume_Vladislav_Orekhov-Miller_EN.docx](Resume/Resume_Vladislav_Orekhov-Miller_EN.docx) |
 | Сопроводительное письмо (Markdown) | [Resume/cover_letter_ru.md](Resume/cover_letter_ru.md) |
-| Сопроводительное письмо (Word) | [Resume/Cover_Letter_Vladislav_Orekhov_RU.docx](Resume/Cover_Letter_Vladislav_Orekhov_RU.docx) |
+| Сопроводительное письмо (Word) | [Resume/Cover_Letter_Vladislav_Orekhov-Miller_RU.docx](Resume/Cover_Letter_Vladislav_Orekhov-Miller_RU.docx) |
 
 ---
 
