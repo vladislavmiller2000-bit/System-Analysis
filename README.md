@@ -73,6 +73,8 @@
 | English (Markdown) | [Resume/resume_en_new.md](Resume/resume_en_new.md) |
 | Русский (Word) | [Resume/Resume_Vladislav_Orekhov_RU.docx](Resume/Resume_Vladislav_Orekhov_RU.docx) |
 | English (Word) | [Resume/Resume_Vladislav_Orekhov_EN.docx](Resume/Resume_Vladislav_Orekhov_EN.docx) |
+| Сопроводительное письмо (Markdown) | [Resume/cover_letter_ru.md](Resume/cover_letter_ru.md) |
+| Сопроводительное письмо (Word) | [Resume/Cover_Letter_Vladislav_Orekhov_RU.docx](Resume/Cover_Letter_Vladislav_Orekhov_RU.docx) |
 
 ---
 
@@ -103,7 +105,7 @@
 ```
 System-Analysis/
 ├── README.md                  ← вы здесь
-├── Resume/                    ← резюме (RU/EN, Markdown + Word)
+├── Resume/                    ← резюме, сопроводительное письмо (Markdown + Word)
 ├── vita_clinic_project/       ← проект 1: бизнес-анализ клиники
 │   ├── diagrams/              ← BPMN, UML диаграммы (HTML)
 │   └── ...                    ← анализ, требования, прототип
