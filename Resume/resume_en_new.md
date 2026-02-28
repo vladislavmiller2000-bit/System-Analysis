@@ -93,8 +93,9 @@ Fluent in Russian and English, experienced working in international teams across
 
 ## EDUCATION
 
-**Financial University under the Government of the Russian Federation, Moscow** | 2018 – 2022  
-Bachelor of Economics, International Finance
+**Touro University New York** | 2018 – 2023  
+Bachelor of Science, Business Management  
+**Senior Honors Project:** Case Study of Virgin Galactic within the Aerospace Industry ([PDF](Senior_Honors_Project_Virgin_Galactic_Case_Study.docx))
 
 ---
 

@@ -75,6 +75,7 @@
 | English (Word) | [Resume/Resume_Vladislav_Orekhov-Miller_EN.docx](Resume/Resume_Vladislav_Orekhov-Miller_EN.docx) |
 | Сопроводительное письмо (Markdown) | [Resume/cover_letter_ru.md](Resume/cover_letter_ru.md) |
 | Сопроводительное письмо (Word) | [Resume/Cover_Letter_Vladislav_Orekhov-Miller_RU.docx](Resume/Cover_Letter_Vladislav_Orekhov-Miller_RU.docx) |
+| Дипломный проект (Honors) | [Resume/Senior_Honors_Project_Virgin_Galactic_Case_Study.docx](Resume/Senior_Honors_Project_Virgin_Galactic_Case_Study.docx) |
 
 ---
 
@@ -93,7 +94,7 @@
 
 ## Обо мне
 
-- **Финансовый университет при Правительстве РФ** — Бакалавр экономики, Международные финансы (2018–2022)
+- **Touro University New York** — Bachelor of Science, Business Management (2018–2023)
 - **Яндекс Практикум** — Системный аналитик (2025–2026)
 - Стажировки: **Burger King** (маркетинговые исследования, бизнес-аналитика), **Knight Frank** (анализ рынка недвижимости)
 - Языки: Русский (родной) · English (fluent) · Español (básico) · עברית (בסיסי)

@@ -93,8 +93,9 @@
 
 ## ОБРАЗОВАНИЕ
 
-**Финансовый университет при Правительстве РФ, Москва** | 2018 – 2022  
-Бакалавр экономики, Международные финансы
+**Touro University New York** | 2018 – 2023  
+Bachelor of Science, Business Management  
+**Senior Honors Project:** Case Study of Virgin Galactic within the Aerospace Industry ([PDF](Senior_Honors_Project_Virgin_Galactic_Case_Study.docx))
 
 ---
 
