@@ -4,8 +4,7 @@
 
 ## Артефакты
 
-- [01_user_story_map_checkup.md](01_user_story_map_checkup.md) — финальная User Story Map (активности → задачи → истории)
-- [02_mvp_selection_checkup.md](02_mvp_selection_checkup.md) — выделение MVP под 2 гипотезы + метрики
+- [01_checkup_user_story_map_mvp.md](01_checkup_user_story_map_mvp.md) — единый артефакт: User Story Map + MVP (границы + метрики)
 
 ## Экспорт из Miro
 
