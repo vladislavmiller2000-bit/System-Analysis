@@ -45,6 +45,14 @@
 | [04_storyboard_figma_guide.md](04_storyboard_figma_guide.md) | Руководство по созданию вайрфреймов |
 | [05_storyboard_prototype.html](05_storyboard_prototype.html) | Кликабельный HTML-прототип |
 
+## User Story Map + MVP (функция «Чекап»)
+
+Отдельный мини-блок по новой функции **«Чекап»**: подбор плана регулярных обследований и путь до записи.
+
+- [checkup/README.md](checkup/README.md) — входная точка (ссылки на карту и MVP)
+- [checkup/01_user_story_map_checkup.md](checkup/01_user_story_map_checkup.md) — финальная User Story Map
+- [checkup/02_mvp_selection_checkup.md](checkup/02_mvp_selection_checkup.md) — MVP и метрики
+
 ## Навыки
 
 `BPMN 2.0` `UML State Machine` `AS-IS / TO-BE` `Сбор требований` `Интервью стейкхолдеров` `Use Case` `Figma` `UI/UX wireframing`
