@@ -22,7 +22,7 @@
 | UI/UX прототип | 12 вайрфреймов в Figma + кликабельный HTML-прототип |
 
 **Ключевые артефакты:**
-[User Story Map + MVP (Чекап)](vita_clinic_project/checkup/) · [Единый артефакт (MD)](vita_clinic_project/checkup/01_checkup_user_story_map_mvp.md)
+[User Story Map + MVP (Чекап) — единый артефакт](vita_clinic_project/checkup/01_checkup_user_story_map_mvp.md)
 
 [AS-IS BPMN](vita_clinic_project/diagrams/01_as_is_bpmn_v2.html) · [TO-BE BPMN](vita_clinic_project/diagrams/04_to_be_bpmn_final.html) · [UML State Machine](vita_clinic_project/diagrams/02_uml_state_machine_v2.html) · [Figma-прототип](https://www.figma.com/design/rxccOxVZ3ekyBEJi02YzMZ/) · [Спецификация Use Case](https://docs.google.com/document/d/1X8YmMWUtYVwiQn9p_pQ7CKJstmVVdmBX_gUB1LEBUWc/edit?tab=t.0) · [Диаграммы в Draw.io](https://app.diagrams.net/#G1cpTBE5WZsy-v7101zYY8ejd1wBPt9vyv)
 

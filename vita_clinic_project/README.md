@@ -49,7 +49,6 @@
 
 Отдельный мини-блок по новой функции **«Чекап»**: подбор плана регулярных обследований и путь до записи.
 
-- [checkup/README.md](checkup/README.md) — входная точка
 - [checkup/01_checkup_user_story_map_mvp.md](checkup/01_checkup_user_story_map_mvp.md) — единый артефакт: User Story Map + MVP
 
 ## Навыки
